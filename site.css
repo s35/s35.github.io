@@ -1,13 +1,12 @@
-        body {
-            font-family: 'Roboto', sans-serif !important;
-            width: 950px;
-            margin: 0 auto !important;
-        }
+body {
+    font-family: 'Roboto', sans-serif !important;
+    width: 950px;
+    margin: 0 auto !important;
+}
 
-  .panel-heading{
-      padding: 0 0 0 0;
-  }
+.panel-heading {
+    padding: 0 0 0 0;
+}
 
-  .panel{
- 
-  }
+.panel {
+}
