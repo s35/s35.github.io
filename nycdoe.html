@@ -9,7 +9,7 @@
     }
 
     div.tooltip {
-        /*position: absolute;*/
+        position: absolute;
         text-align: left;
         font-family: "PT Sans", sans-serif;
         white-space: normal;
@@ -291,16 +291,6 @@
                     tt.style("opacity", 0);
                     xline.attr("opacity", 0);
                 });
-
-                //d3.selectAll(".x.axis, .legend").on("mousemove", function () {
-                //    tt.html("This axis uses SI prefixes:<br>m: 10<sup>-3</sup><br>k: 10<sup>3</sup><br>M: 10<sup>6</sup>")
-                //        .style('top', d3.event.pageY - 12 + 'px')
-                //        .style('left', d3.event.pageX + 25 + 'px')
-                //        .style("opacity", 0.9);
-                //}).on("mouseout", function (d) {
-                //    tt.style("opacity", 0);
-                //});
-
             }
 
             function filter() {
