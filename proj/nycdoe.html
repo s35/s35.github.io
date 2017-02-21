@@ -206,7 +206,6 @@
 
             //auto-complete end
 
-
             xScale.domain(d3.extent(data, function (d) { return +((d.graduation_rate) * 100).toFixed(2); }));
 
             svg.append("g")
@@ -327,7 +326,14 @@
                         .attr("cy", function (d) { return d.y; });
                 });
 
+                //remove empty nodes
 
+                var emptyNodes = d3.selectAll(".countries")
+                   .filter(function (d) { return d[variable]  === ""; });
+
+                emptyNodes.remove();
+
+                //
 
                 function tooltipVal(val) {
                     if (variable !== "total_students") {
