@@ -37,7 +37,7 @@
     }
 
     body {
-        text-align: center;
+        text-align: left;
         font-family: 'Roboto', sans-serif !important;
         width: 950px;
         margin: 0 auto !important;
@@ -55,6 +55,8 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
+<link rel="stylesheet" href="../resources/JavaScript-autoComplete-master/auto-complete.css"/>
+
 <body>
     <br>
     <div>
@@ -70,6 +72,7 @@
 
     <div class="row">
         <div class="col-md-12" style="display:inline;">
+
             <div class="btn-group" style="float:left;">
                 <button type="button" class="button1 btn btn-default" value="graduation_rate">Graduation Rate</button>
                 <button type="button" class="button1 btn btn-default" value="attendance_rate">Attendance Rate</button>
@@ -80,9 +83,10 @@
                 <button type="button" class="button2 btn btn-default" value="scaleLinear">Linear Scale</button>
                 <button type="button" class="button2 btn btn-default" value="scaleLog">Log Scale</button>
             </div>
-
-            <!-- Work on highlight school feature .... basically have an input.. provide suggestions across all available
-                schools.. then highlight that particular dot and keep it highlighted through transitions -->
+            <br /><br />
+            <div style="width: 350px;">
+                <input name="q" placeholder="Enter School Name" id="q" value="" class="schoolInput form-control" />
+            </div>
 
             <div id="graph">
 
@@ -114,7 +118,7 @@
     </div>
 
     <hr />
-    <h5>Created by <a href="index.html">Saurav Mohapatra</a></h5>
+    <h5>Created by <a href="../index.html">Saurav Mohapatra</a></h5>
     <h5>Data Source: <a href="https://data.cityofnewyork.us/Education/DOE-High-School-Directory-2017/s3k6-pzi2">https://data.cityofnewyork.us/Education/DOE-High-School-Directory-2017/s3k6-pzi2</a></h5>
     <h5>Graph inspired by: <a href="https://gf.neocities.org/co2bs/co2bee.html">https://gf.neocities.org/co2bs/co2bee.html</a></h5>
     <br>
@@ -123,6 +127,8 @@
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../resources/JavaScript-autoComplete-master/auto-complete.min.js"></script>
 
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -171,10 +177,32 @@
         chartState.scale = "scaleLinear";
         chartState.legend = "Graduation Rate";
 
-        d3.csv("DOE_High_School_Directory_2017.csv", function (error, data) {
+        d3.csv("../data/DOE_High_School_Directory_2017.csv", function (error, data) {
             if (error) throw error;
 
             var dataSet = data;
+
+            //auto-complete start
+
+            new autoComplete({
+                selector: 'input[name="q"]',
+                minChars: 2,
+                source: function (term, suggest) {
+                    term = term.toLowerCase();
+                    var schoolNames = [];
+                    for (var k = 0; k < dataSet.length; k++) {
+                        schoolNames.push(dataSet[k].school_name);
+                    }
+                    var choices = schoolNames;
+                    var matches = [];
+                    for (i = 0; i < choices.length; i++)
+                        if (~choices[i].toLowerCase().indexOf(term)) matches.push(choices[i]);
+                    suggest(matches);
+                }
+            });
+
+            //auto-complete end
+
 
             xScale.domain(d3.extent(data, function (d) { return +((d.graduation_rate) * 100).toFixed(2); }));
 
@@ -221,8 +249,19 @@
 
             d3.selectAll("input").on("change", filter);
 
-            function redraw(variable) {
 
+
+   
+
+            //$("#q").change(function () {
+            //    console.log(this.value);
+            //    redraw(chartState.variable, this.value);
+            //});
+
+
+
+            function redraw(variable, schoolHighlighted) {
+                console.log("redraw called");
                 if (chartState.scale == "scaleLinear") { xScale = d3.scaleLinear().range([padding[3], w - padding[1]]); };
 
                 if (chartState.scale == "scaleLog") { xScale = d3.scaleLog().range([padding[3], w - padding[1]]); };
@@ -232,7 +271,6 @@
                 } else {
                     xScale.domain(d3.extent(dataSet, function (d) { return +(d[variable]); }));
                 }
-
 
                 var xAxis = d3.axisBottom(xScale)
                     .ticks(10, ".0s")
@@ -272,36 +310,8 @@
                     .attr("class", "countries")
                     .attr("cx", 0)
                     .attr("cy", (h / 2) - padding[2] / 2)
-                       .attr("r", function (d) {
-                           if (d.school_name === "John Bowne High School") {
-                               return "5";
-                           } else {
-                               return "4";
-                           }
-                       })
-                    .attr("fill", function (d) {
-                        if (d.school_name === "John Bowne High School") {
-                            return "white";
-                        } else {
-                            return colors(d.boro)
-                        }
-                    })
-                    .attr("stroke", function (d) {
-                        if (d.school_name === "John Bowne High School") {
-                            return "black";
-                        }
-                        else {
-                            return "none";
-                        }
-                    })
-                            .attr("stroke-width", function (d) {
-                                if (d.school_name === "John Bowne High School") {
-                                    return "1";
-                                }
-                                else {
-                                    return "none";
-                                }
-                            })
+                    .attr("r", 4)
+                    .attr("fill", function(d){ return colors(d.boro); })
                     .merge(countriesCircles)
                     .transition()
                     .duration(2000)
@@ -335,6 +345,8 @@
                     tt.style("opacity", 0);
                     xline.attr("opacity", 0);
                 });
+
+
             }
 
             function filter() {
@@ -371,7 +383,27 @@
 
                 redraw(chartState.variable);
             }
+
+
+
+            //update circle based on school name selected
+
+            $("#q").on("change", function () {
+                console.log(this.value);
+
+                d3.selectAll(".countries")
+                    .filter(function (d) { return d.school_name == this.value; })
+                    .transition()
+                    .duration(1000)
+                    .attr("r", "5")
+                    .attr("fill", "white")
+                    .attr("stroke", "black")
+                    .attr("stroke-width", "1");
+            });
         });
+
+  
+
 
     </script>
 </body>
