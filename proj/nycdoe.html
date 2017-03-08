@@ -303,13 +303,14 @@
                         }))
                     .stop();
 
-                for (var i = 0; i < dataSet.length; ++i) simulation.tick();
+                for (var i = 0; i < 150; ++i) simulation.tick();
 
                 countriesCircles = svg.selectAll(".countries")
                     .data(dataSet, function (d) { return d.school_name });
 
                 countriesCircles.exit()
                     .transition()
+                    .delay(500)
                     .duration(1000)
                     .attr("cx", 0)
                     .attr("cy", (h / 2) - padding[2] / 2)
@@ -324,6 +325,7 @@
                     .attr("fill", function (d) { return colors(d.boro); })
                     .merge(countriesCircles)
                     .transition()
+                    .delay(500)
                     .duration(2000)
                     .attr("cx", function (d) { return d.x; })
                     .attr("cy", function (d) { return d.y; });
@@ -339,6 +341,7 @@
 
                 schoolNode
                     .transition()
+                    .delay(500)
                     .duration(4000)
                     .attr("r", "7")
                     .attr("fill", "yellow")
