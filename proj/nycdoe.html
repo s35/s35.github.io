@@ -303,7 +303,7 @@
                         }))
                     .stop();
 
-                for (var i = 0; i < 150; ++i) simulation.tick();
+                for (var i = 0; i < dataSet.length; ++i) simulation.tick();
 
                 countriesCircles = svg.selectAll(".countries")
                     .data(dataSet, function (d) { return d.school_name });
@@ -334,7 +334,6 @@
 
 
                 //
-
 
                 var schoolNode = d3.selectAll(".countries")
                     .filter(function (d) { return d.school_name === schoolHighlighted; });
