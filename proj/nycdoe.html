@@ -6,11 +6,6 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <style>
         /* all css here */
-        .cells path {
-            fill: none;
-            pointer-events: all;
-        }
-
         div.tooltip {
             position: absolute;
             text-align: left;
@@ -137,9 +132,11 @@
     <h5>Graph based on and inspired by: <a href="https://gf.neocities.org/co2bs/co2bee.html">https://gf.neocities.org/co2bs/co2bee.html</a></h5>
     <br>
 
+    <!-- Jquery js -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="../resources/JavaScript-autoComplete-master/auto-complete.min.js"></script>
@@ -190,10 +187,14 @@
         chartState.variable = "graduation_rate";
         chartState.legend = "Graduation Rate";
 
-        var r = 4;
-
         d3.csv("../data/DOE_High_School_Directory_2017.csv", function (error, data) {
             if (error) throw error;
+
+            data.forEach(function (d) {
+                d["graduation_rate"] = +(d["graduation_rate"] * 100).toFixed(2);
+                d["college_career_rate"] = +(d["college_career_rate"] * 100).toFixed(2);
+                d["attendance_rate"] = +(d["attendance_rate"] * 100).toFixed(2);
+            });
 
             var dataSet = data;
 
@@ -208,10 +209,9 @@
                     for (var k = 0; k < dataSet.length; k++) {
                         schoolNames.push(dataSet[k].school_name);
                     }
-                    var choices = schoolNames;
                     var matches = [];
-                    for (i = 0; i < choices.length; i++)
-                        if (~choices[i].toLowerCase().indexOf(term)) matches.push(choices[i]);
+                    for (i = 0; i < schoolNames.length; i++)
+                        if (~schoolNames[i].toLowerCase().indexOf(term)) matches.push(schoolNames[i]);
                     suggest(matches);
                 }
             });
@@ -268,14 +268,10 @@
 
             function redraw(variable, schoolHighlighted) {
 
-                if (chartState.legend === "Enrollment") { xScale = d3.scaleLog().clamp(true).range([padding[3], w - padding[1]]).nice(); }
+                if (chartState.legend === "Enrollment") { xScale = d3.scaleLog().range([padding[3], w - padding[1]]); }
                 else { xScale = d3.scaleLinear().clamp(true).range([padding[3], w - padding[1]]); }
 
-                if (variable !== "total_students") {
-                    xScale.clamp(true).domain(d3.extent(dataSet, function (d) { return +(d[variable] * 100).toFixed(2); }));
-                } else {
-                    xScale.clamp(true).domain(d3.extent(dataSet, function (d) { return +(d[variable]); }));
-                }
+                xScale.domain(d3.extent(dataSet, function (d) { return +(d[variable]); }));
 
                 var xAxis = d3.axisBottom(xScale)
                     .ticks(10, ".0s")
@@ -285,13 +281,7 @@
                     .call(xAxis);
 
                 var simulation = d3.forceSimulation(dataSet)
-                    .force("x", d3.forceX(function (d) {
-                        if (variable === "total_students") {
-                            return xScale(+(d[variable]));
-                        } else {
-                            return xScale(+(d[variable] * 100).toFixed(2));
-                        }
-                    }).strength(2))
+                    .force("x", d3.forceX(function (d) { return xScale(+(d[variable])); }).strength(2))
                     .force("y", d3.forceY((h / 2) - padding[2] / 2))
                     .force("collide", d3.forceCollide(
                         function (d) {
@@ -300,13 +290,12 @@
                             } else {
                                 return 5 * 1.33;
                             }
-                        }))
-                    .stop();
+                        })).stop();
 
-                for (var i = 0; i < dataSet.length; ++i) simulation.tick();
+                for (var i = 0; i < 120; ++i) simulation.tick();
 
                 countriesCircles = svg.selectAll(".countries")
-                    .data(dataSet, function (d) { return d.school_name });
+                    .data(dataSet.filter(function (d) { return d[variable] != 0; }), function (d) { return d.school_name });
 
                 countriesCircles.exit()
                     .transition()
@@ -332,7 +321,6 @@
 
                 legend.text(chartState.legend);
 
-
                 //
 
                 var schoolNode = d3.selectAll(".countries")
@@ -347,18 +335,9 @@
                     .attr("stroke", "black")
                     .attr("stroke-width", "2");
 
-                //remove empty nodes
-
-                var emptyNodes = d3.selectAll(".countries")
-                   .filter(function (d) { return d[variable] === ""; });
-
-                emptyNodes.remove();
-
-                //
-
                 function tooltipVal(val) {
                     if (variable !== "total_students") {
-                        return (val * 100).toFixed(2) + "%";
+                        return val + "%";
                     } else {
                         return val;
                     }
@@ -418,6 +397,8 @@
 
                 redraw(chartState.variable);
             }
+
+            // TODO: convert both event handlers below to vanilla JS. Dont load jquery for this page at all.
 
             //update circle based on school name selected
 
