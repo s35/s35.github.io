@@ -283,14 +283,8 @@
                 var simulation = d3.forceSimulation(dataSet)
                     .force("x", d3.forceX(function (d) { return xScale(+(d[variable])); }).strength(2))
                     .force("y", d3.forceY((h / 2) - padding[2] / 2))
-                    .force("collide", d3.forceCollide(
-                        function (d) {
-                            if (d.school_name === schoolHighlighted) {
-                                return 15 * 1.33;
-                            } else {
-                                return 5 * 1.33;
-                            }
-                        })).stop();
+                    .force("collide", d3.forceCollide(6.8))
+                    .stop();
 
                 for (var i = 0; i < 120; ++i) simulation.tick();
 
@@ -319,7 +313,6 @@
                     .attr("cx", function (d) { return d.x; })
                     .attr("cy", function (d) { return d.y; });
 
-                legend.text(chartState.legend);
 
                 //
 
@@ -328,12 +321,17 @@
 
                 schoolNode
                     .transition()
-                    .delay(500)
-                    .duration(4000)
-                    .attr("r", "7")
+                    .duration(2000)
+                    .attr("r", "6")
                     .attr("fill", "yellow")
                     .attr("stroke", "black")
-                    .attr("stroke-width", "2");
+                    .attr("stroke-width", "2")
+                    .attr("cx", function (d) { return d.x; })
+                    .attr("cy", function (d) { return d.y; });
+
+                //
+
+                legend.text(chartState.legend);
 
                 function tooltipVal(val) {
                     if (variable !== "total_students") {
@@ -398,16 +396,15 @@
                 redraw(chartState.variable);
             }
 
-            // TODO: convert both event handlers below to vanilla JS. Dont load jquery for this page at all.
+            // IE and Edge don't like JQuery.
 
             //update circle based on school name selected
-
             $("#q").on("change", function () {
                 var schoolSelected = this.value;
+                console.log(schoolSelected);
                 $("#q").val('');
                 redraw(chartState.variable, schoolSelected);
             });
-
 
             //reset graph
             $('#resetBtn').on("click", function () {
