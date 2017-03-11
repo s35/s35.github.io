@@ -148,7 +148,7 @@
 
         var w = 1000, h = 335;
 
-        var padding = [0, 40, 38, 10];
+        var padding = [0, 60, 38, 10];
 
         var xScale = d3.scaleLinear()
             .range([padding[3], w - padding[1]]);
@@ -178,9 +178,9 @@
             .attr("width", w)
             .attr("height", h);
 
-        var xline = svg.append("line")
-            .attr("stroke", "gray")
-            .attr("stroke-dasharray", "1,2");
+        //var xline = svg.append("line")
+        //    .attr("stroke", "gray")
+        //    .attr("stroke-dasharray", "1,2");
 
         var chartState = {};
 
@@ -344,15 +344,15 @@
                 d3.selectAll(".countries").on("mousemove", function (d) {
                     tt.html("School: <strong>" + d.school_name + "</strong><br>"
                     + chartState.legend + ": <strong>" + tooltipVal(d[variable]) + "</strong>")
-                        .style('top', d3.event.pageY - 225 + 'px')
-                        .style('left', d3.event.pageX - 270 + 'px')
+                        .style('top', d3.event.pageY - 270 + 'px')
+                        .style('left', d3.event.pageX  - 660 + 'px')
                         .style("opacity", 0.9);
 
-                    xline.attr("x1", d3.select(this).attr("cx"))
-                        .attr("y1", d3.select(this).attr("cy"))
-                        .attr("y2", (h - padding[2]))
-                        .attr("x2", d3.select(this).attr("cx"))
-                        .attr("opacity", 1);
+                    //xline.attr("x1", d3.select(this).attr("cx"))
+                    //    .attr("y1", d3.select(this).attr("cy"))
+                    //    .attr("y2", (h - padding[2]))
+                    //    .attr("x2", d3.select(this).attr("cx"))
+                    //    .attr("opacity", 1);
 
                 }).on("mouseout", function (d) {
                     tt.style("opacity", 0);
@@ -398,7 +398,6 @@
 
             // IE and Edge don't like JQuery.
 
-            //update circle based on school name selected
             $("#q").on("change", function () {
                 var schoolSelected = this.value;
                 console.log(schoolSelected);
