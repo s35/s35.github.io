@@ -49,6 +49,12 @@
             fill: black;
             opacity: 0.57;
         }
+
+        .yearVal{
+            font-size: 32px;
+            fill: black;
+            opacity: 0.57;
+        }
     </style>
 
 </head>
@@ -57,15 +63,23 @@
     <div>
         <h2>The Auto Revolution in India</h2>
 
+        <p style="display:inline;">
+            Recently I found out that the Indian goverment has a <a href="https://www.data.gov.in/" target="_blank">website</a> where they publish data from all branches of government much like the American equivalent (<a href="https://www.data.gov/" target="_blank">data.gov</a>). Browsing through, I found an interesting dataset which shows the number of registered vehicles (by type) each year from <h4 style="display:inline;">1951</h4> to <h4 style="display:inline;">2013</h4>. 
+          </p>
+        <p>
+            India, being one of the fastest growing countries in the world (by gdp) has seen a massive surge in the automobile industry (both 2 and 4 wheelers). Looking at the graph, we can see the almost exponential increase in registrations for 2 wheelers. This is a direct result of the growth of the middle class in recent years and the gradual decrease of the overall poverty rate.
+        </p>
+
     </div>
-    <br />
     <hr />
 
     <div class="row">
         <div class="col-md-12">
+            <a style="float:right; cursor:pointer;" onclick="location.reload()">Reset</a>
             <div id="graph1">
 
             </div>
+            
         </div>
     </div>
 
@@ -73,13 +87,13 @@
 
     <hr />
 
-    <h5>
+    <p>
         Note:
         All figures are in thousands; *: Two-wheelers include auto-rickshaws for the years ending 31st March 1959, 1960, 1962, 1963, 1964, 1965, 1967, 1968 and 1969. For the remaining years, auto-rickshaws are included in Others; **: Others include tractors, trailers, three wheelers (passenger vehicles)/LMV and other miscellaneous vehicles which are not classified separately; @: Includes Omni buses since 2001; Totals may not tally due to rounding off of data; Source: Offices of State Transport Commissioners/UT Administration  
-    </h5>
+    </p>
 
-    <h5>Created by: <a href="../../index.html">Saurav Mohapatra</a></h5>
-    <h5>Data Source: <a href="https://data.gov.in/catalog/total-number-registered-motor-vehicles-india">https://data.gov.in/catalog/total-number-registered-motor-vehicles-india</a></h5>
+    <p>Created by: <a href="../../index.html">Saurav Mohapatra</a></p>
+    <p>Data Source: <a href="https://data.gov.in/catalog/total-number-registered-motor-vehicles-india">https://data.gov.in/catalog/total-number-registered-motor-vehicles-india</a></p>
     <br>
 
 
@@ -97,7 +111,7 @@
 
     <script>
 
-        var margin = { top: 20, right: 360, bottom: 30, left: 80 },
+        var margin = { top: 5, right: 360, bottom: 30, left: 80 },
             width = 975 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
 
@@ -298,6 +312,15 @@
                       return "0"
                   });
 
+
+            svg.append("text")
+                .attr("id", "yearVal")
+                .attr("class", "yearVal")
+                .attr("x", 680)
+                .attr("y", 280)
+                .text(1951);
+
+
             //call interpolate on all count strings
 
             var lastArr2 = ["132550", "24853", "1894", "8597", "14551"];
@@ -321,25 +344,22 @@
             }
     
 
+            function setupStringInterpolationForYear(selector, duration, text) {
+                selector
+                    .transition()
+                    .duration(duration)
+                    .tween("string", function () {
+                        var node = d3.select(this),
+                        i = d3.interpolateString(node.text(), text);
+                        return function (t) {
+                            (node.text(Math.round(i(t))));
+                        }
+                    });
+            }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            var final = "2013";
+            setupStringInterpolationForYear(d3.select(".yearVal"), 4000, final);
         });
-
-
-
 
 
 
