@@ -33,16 +33,6 @@
             font-family: 'Montserrat', sans-serif !important;
         }
 
-        /*text.value {
-            font-size: 100%;
-            fill: white;
-        }
-
-        .tick text {
-            font-family: 'Montserrat', sans-serif !important;
-            font-size: 120%;
-        }*/
-
         .x.axis text{
                    font-family: 'Montserrat', sans-serif !important;
                    opacity: 0.77;
@@ -63,10 +53,6 @@
 
 </head>
 <body>
-
-    <!-- #$$$$ IMPORTANT    **** -->
-    <!-- interpolate text for year + individual counts in a nice font w/ opacity edit and all-->
-
     <br>
     <div>
         <h2>The Auto Revolution in India</h2>
@@ -111,7 +97,7 @@
 
     <script>
 
-        var margin = { top: 20, right: 350, bottom: 30, left: 80 },
+        var margin = { top: 20, right: 360, bottom: 30, left: 80 },
             width = 975 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
 
@@ -225,7 +211,7 @@
                .attr("stroke-dasharray", totalLength[0] + " " + totalLength[0])
                .attr("stroke-dashoffset", totalLength[0])
                .transition()
-                 .duration(5000)
+                 .duration(4000)
                  .ease("linear")
                  .attr("stroke-dashoffset", 0);
 
@@ -233,7 +219,7 @@
                .attr("stroke-dasharray", totalLength[1] + " " + totalLength[1])
                .attr("stroke-dashoffset", totalLength[1])
                .transition()
-                 .duration(5000)
+                 .duration(4000)
                  .ease("linear")
                  .attr("stroke-dashoffset", 0);
 
@@ -241,7 +227,7 @@
            .attr("stroke-dasharray", totalLength[2] + " " + totalLength[2])
            .attr("stroke-dashoffset", totalLength[2])
            .transition()
-             .duration(5000)
+             .duration(4000)
              .ease("linear")
              .attr("stroke-dashoffset", 0);
 
@@ -249,7 +235,7 @@
            .attr("stroke-dasharray", totalLength[3] + " " + totalLength[3])
            .attr("stroke-dashoffset", totalLength[3])
            .transition()
-             .duration(5000)
+             .duration(4000)
              .ease("linear")
              .attr("stroke-dashoffset", 0);
 
@@ -257,7 +243,7 @@
            .attr("stroke-dasharray", totalLength[4] + " " + totalLength[4])
            .attr("stroke-dashoffset", totalLength[4])
            .transition()
-             .duration(5000)
+             .duration(4000)
              .ease("linear")
              .attr("stroke-dashoffset", 0);
 
@@ -273,13 +259,25 @@
                  .attr("class", "type");
 
 
+            var label = countArea.selectAll(".type")
+                .append("rect")
+                //.attr("class", "count")
+                .attr("x", 340)
+                .attr("y", function (d, i) { return ((i) * 30) + 19; })
+                .attr("width", "10")
+                .attr("height", "10")
+                .attr("fill", function (d, i) {
+                    return z(i);
+                })
+
+
 
             var lastArr = ["132550", "24853", "1894", "8597", "14551"];
 
             var label = countArea.selectAll(".type")
                 .append("text")
                 .attr("class", "count")
-                .attr("x", 445)
+                .attr("x", 455)
                 .attr("y", function (d, i) { return (i + 1) * 30; })
                 .text(function (d, i) {
                     //console.log(d[d.name]);
@@ -313,13 +311,13 @@
                         var node = d3.select(this),
                         i = d3.interpolateRound(node.text(), text);
                         return function (t) {
-                            Math.ceil(node.text(i(t)));
+                            (node.text(i(t) + "k"));
                         }
                     });
             }
 
             for (var i = 0; i < lastArr2.length; i++) {
-                setupStringInterpolation(d3.select("#count"+i), 5000, lastArr2[i]);
+                setupStringInterpolation(d3.select("#count"+i), 4000, lastArr2[i]);
             }
     
 
