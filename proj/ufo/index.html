@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <style>
+    </style>
+</head>
+<body>
+
+    <div class="row">
+        <div class="col-md-12">
+
+        </div>
+    </div>
+
+
+
+
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxAH0XtYZcmVsXwkWHGpvFbXVyR0TXxdQ&callback=initMap"
+            type="text/javascript"></script>
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- d3 v4 -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script>
+
+
+
+        //var ufo_data =
+
+
+
+        //reverse geocode here ---
+        function getReverseGeocodingData(lat, lng) {
+            var latlng = new google.maps.LatLng(lat, lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    console.log(results);
+                    var address = (results[0].formatted_address);
+                }
+            });
+        }
+    </script>
+
+</body>
