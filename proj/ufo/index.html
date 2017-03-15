@@ -5,22 +5,56 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <style>
+        body {
+            text-align: left;
+            font-family: 'Roboto', sans-serif !important;
+            width: 950px;
+            margin: 0 auto !important;
+        }
+
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
+
+        .counties {
+            fill: none;
+        }
+
+        .states {
+            fill: none;
+            stroke: #fff;
+            stroke-linejoin: round;
+        }
+
+        text {
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0.49;
+        }
     </style>
 </head>
 <body>
-
+    <h3>
+        "UFO" sightings reported across the US (2016)
+    </h3>
+    <p>
+ 
+    </p>
+    <hr />
     <div class="row">
         <div class="col-md-12">
-
+            <br />
+            <svg width="960" height="600"></svg>
         </div>
     </div>
 
-
-
-
-    <!-- Google Maps API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxAH0XtYZcmVsXwkWHGpvFbXVyR0TXxdQ&callback=initMap"
-            type="text/javascript"></script>
+    <hr />
+    <p>
+        Created by: <a href="../../index.html">Saurav Mohapatra</a><br />
+        Data Source: <a href="https://data.world/aarranzlopez/ufo-sights-2016-us-and-canada">data.world</a>
+    </p>
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -33,30 +67,127 @@
     <!-- d3 v4 -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
 
-    <script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+
+    <script type="text/javascript">
+
+        var svg = d3.select("svg");
+
+        var width = 1300, height = 1300;
+
+        svg
+            .attr("width", '100%')
+            .attr("height", '30%')
+            .attr('viewBox', '0 0 ' + Math.min(width, height) + ' ' + 700)
+            .attr('preserveAspectRatio', 'xMinYMin');
+
+        var events = d3.map();
+
+        var path = d3.geoPath();
+
+        var x = d3.scaleLinear()
+            .domain([1, 10])
+            .rangeRound([600, 860]);
+
+        var color = d3.scaleThreshold()
+                .domain([50, 100, 150, 200, 250, 300, 350, 400, 450])
+                .range(["#C2B1EC", "#B7A2EB", "#AC94EB", "#A186EB", "#9678EB", "#8B6AEB", "#805CEB", "#754EEB", "#6A40EB",
+                    "#5F32EB"]);
 
 
+        //add legend here
+        var data1 = [50, 100, 150, 200, 250, 300, 350, 400, 450];
 
-        //var ufo_data =
-
-
-
-        //reverse geocode here ---
-        function getReverseGeocodingData(lat, lng) {
-            var latlng = new google.maps.LatLng(lat, lng);
-            // This is making the Geocode request
-            var geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-                if (status !== google.maps.GeocoderStatus.OK) {
-                    alert(status);
-                }
-                // This is checking to see if the Geoeode Status is OK before proceeding
-                if (status == google.maps.GeocoderStatus.OK) {
-                    console.log(results);
-                    var address = (results[0].formatted_address);
-                }
+        svg.append("g")
+            .attr("id", "legend")
+            .selectAll("legend")
+            .data(data1)
+        .enter()
+            .append("rect")
+            .attr("x", function (d, i) { return ((56 * i) + 200); })
+            .attr("y", 650)
+            .attr("width", 55)
+            .attr("height", 20)
+            .attr("fill", function (d) {
+                return color(d);
             });
+
+
+        svg.append("g")
+          .selectAll("legend")
+          .data(data1)
+          .enter()
+          .append("text")
+          .attr("x", function (d, i) { return ((56 * i) + 215); })
+          .attr("y", 645)
+          .attr("width", 55)
+          .attr("height", 20)
+          .text(function (d) {
+              return ">" + d;
+          });
+
+
+
+
+        d3.queue()
+            .defer(d3.json, "https://d3js.org/us-10m.v1.json")
+            .defer(d3.tsv, "us-state-names.tsv")
+            .defer(d3.csv, "counts.csv", function (d) { events.set(d.state, +d.count); })
+            .await(ready);
+
+        function ready(error, us, stateData) {
+            if (error) throw error;
+
+            svg.append("g")
+                .attr("class", "counties")
+              .selectAll("path")
+              .data(topojson.feature(us, us.objects.states).features)
+              .enter().append("path")
+                .attr("fill", function (d) { return colorStates(d); })
+                .attr("d", path)
+              .append("title")
+                .text(function (d, i) {
+
+                    for (var i = 0; i < stateData.length; i++) {
+                        if (d.id == pad(stateData[i].id, 2)) {
+                            var stateCode = stateData[i].code;
+                            if (events.has(stateCode)) {
+                                return (events.get(stateCode)) + " sightings reported";
+                            }
+                        }
+                    }
+                });
+
+            svg.append("path")
+                .datum(topojson.mesh(us, us.objects.states, function (a, b) { return a !== b; }))
+                .attr("class", "states")
+                .attr("d", path);
+
+
+            //coloring function
+            function colorStates(d) {
+                for (var i = 0; i < stateData.length; i++) {
+                    if (d.id == pad(stateData[i].id, 2)) {
+                        var stateCode = stateData[i].code;
+                        if (events.has(stateCode)) {
+                            return color(events.get(stateCode));
+                        }
+                    }
+                }
+            }
+
+            function pad(n, width, z) {
+                z = z || '0';
+                n = n + '';
+                return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+            }
         }
+
+
+
     </script>
+
+
 
 </body>
