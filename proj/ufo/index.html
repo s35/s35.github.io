@@ -139,6 +139,8 @@
         function ready(error, us, stateData) {
             if (error) throw error;
 
+            console.log(us);
+
             svg.append("g")
                 .attr("class", "counties")
               .selectAll("path")
