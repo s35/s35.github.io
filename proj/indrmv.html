@@ -1,0 +1,393 @@
+﻿<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <!-- Bootstrap Core -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <style>
+        body {
+            text-align: left;
+            font-family: 'Roboto', sans-serif !important;
+            width: 950px;
+            margin: 0 auto !important;
+        }
+
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .x.axis path {
+            display: none;
+        }
+
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
+        .x.axis text{
+                   font-family: 'Montserrat', sans-serif !important;
+                   opacity: 0.77;
+        }
+
+        .y.axis text{
+                   font-family: 'Montserrat', sans-serif !important;
+                   opacity: 0.77;
+        }
+
+
+        .count{
+            font-size: 18px;
+            fill: black;
+            opacity: 0.57;
+        }
+
+        .yearVal{
+            font-size: 32px;
+            fill: black;
+            opacity: 0.57;
+        }
+
+        .title{
+            font-size: 18px;
+            color: black;
+            opacity: 0.57;
+        }
+    </style>
+
+</head>
+<body>
+    <br>
+    <div>
+        <h2>The Auto Revolution in India</h2>
+
+        <p style="display:inline;">
+            Recently I found out that the Indian goverment has a <a href="https://www.data.gov.in/" target="_blank">website</a> where they publish data from all branches of government much like the American equivalent (<a href="https://www.data.gov/" target="_blank">data.gov</a>). Browsing through, I found an interesting dataset which shows the number of registered vehicles (by type) each year from <h4 style="display:inline;">1951</h4> to <h4 style="display:inline;">2013</h4>. 
+          </p>
+        <p>
+            India, being one of the fastest growing countries in the world (by gdp) has seen a massive surge in the automobile industry (both 2 and 4 wheelers). Looking at the graph, we can see the almost exponential increase in registrations for 2 wheelers. This is a direct result of the growth of the middle class in recent years and the gradual decrease of the overall poverty rate.
+        </p>
+
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-12">
+            <a style="float:right; cursor:pointer;" onclick="location.reload()">Reset</a>
+            <div id="graph1">
+
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    <hr />
+
+    <p>
+        Note:
+        All figures are in thousands; *: Two-wheelers include auto-rickshaws for the years ending 31st March 1959, 1960, 1962, 1963, 1964, 1965, 1967, 1968 and 1969. For the remaining years, auto-rickshaws are included in Others; **: Others include tractors, trailers, three wheelers (passenger vehicles)/LMV and other miscellaneous vehicles which are not classified separately; @: Includes Omni buses since 2001; Totals may not tally due to rounding off of data; Source: Offices of State Transport Commissioners/UT Administration  
+    </p>
+
+    <p>Created by: <a href="../../index.html">Saurav Mohapatra</a></p>
+    <p>Data Source: <a href="https://data.gov.in/catalog/total-number-registered-motor-vehicles-india">https://data.gov.in/catalog/total-number-registered-motor-vehicles-india</a></p>
+    <br>
+
+
+
+    <!-- Jquery JS -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- d3 main -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+
+    <script>
+
+        var margin = { top: 5, right: 360, bottom: 30, left: 80 },
+            width = 975 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        var parseDate = d3.time.format("%Y").parse;
+
+        var x = d3.time.scale()
+            .range([0, width]);
+
+        var y = d3.scale.linear()
+            .range([height, 0]);
+
+        var z = d3.scale.category20();
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .ticks(5)
+            .innerTickSize(15)
+            .outerTickSize(0)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .tickFormat(function (d) { return d + "k"; })
+            .ticks(5)
+            .innerTickSize(15)
+            .outerTickSize(0)
+            .orient("left");
+
+        var line = d3.svg.line()
+            .interpolate("basis")
+            .x(function (d) { return x(d.date); })
+            .y(function (d) { return y(d.count); });
+
+
+        var svg = d3.select("#graph1").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        d3.csv("../data/Registered_Motor_Vehicles_in_India_1951-2013.csv", function (error, data) {
+            z.domain(d3.keys(data[0]).filter(function (key) { return key !== "Year (As on 31st March)" && key !== "All Vehicles"; }));
+
+            data.forEach(function (d) {
+                d.date = parseDate(d["Year (As on 31st March)"]);
+            });
+
+            var companies = z.domain().map(function (name) {
+                return {
+                    name: name,
+                    values: data.map(function (d) {
+                        return { date: d.date, count: +d[name] };
+                    })
+                };
+            });
+
+
+            x.domain(d3.extent(data, function (d) { return d.date; }));
+
+            y.domain([
+              d3.min(companies, function (c) { return d3.min(c.values, function (v) { return v.count; }); }),
+              d3.max(companies, function (c) { return d3.max(c.values, function (v) { return v.count; }); })
+            ]);
+
+            z.domain(companies.map(function (c) { return c.name; }));
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+
+            svg.append("line")
+                  .attr(
+                  {
+                      "class": "horizontalGrid",
+                      "x1": 0,
+                      "x2": width,
+                      "y1": y(0),
+                      "y2": y(0),
+                      "fill": "none",
+                      "shape-rendering": "crispEdges",
+                      "stroke": "black",
+                      "stroke-width": "1px",
+                      "stroke-dasharray": ("3, 3")
+                  });
+
+
+            var company = svg.selectAll(".company")
+                .data(companies)
+              .enter().append("g")
+                .attr("class", "company");
+
+            var path = svg.selectAll(".company").append("path")
+                .attr("class", "line")
+                .attr("d", function (d) {
+                    return line(d.values);
+                })
+                .style("stroke", function (d, i) {
+                    return z(i);
+                });
+
+
+            var totalLength = [path[0][0].getTotalLength(), path[0][1].getTotalLength(), path[0][2].getTotalLength(), path[0][3].getTotalLength(), path[0][4].getTotalLength()];
+
+            d3.select(path[0][0])
+               .attr("stroke-dasharray", totalLength[0] + " " + totalLength[0])
+               .attr("stroke-dashoffset", totalLength[0])
+               .transition()
+                 .duration(4000)
+                 .ease("linear")
+                 .attr("stroke-dashoffset", 0);
+
+            d3.select(path[0][1])
+               .attr("stroke-dasharray", totalLength[1] + " " + totalLength[1])
+               .attr("stroke-dashoffset", totalLength[1])
+               .transition()
+                 .duration(4000)
+                 .ease("linear")
+                 .attr("stroke-dashoffset", 0);
+
+            d3.select(path[0][2])
+           .attr("stroke-dasharray", totalLength[2] + " " + totalLength[2])
+           .attr("stroke-dashoffset", totalLength[2])
+           .transition()
+             .duration(4000)
+             .ease("linear")
+             .attr("stroke-dashoffset", 0);
+
+            d3.select(path[0][3])
+           .attr("stroke-dasharray", totalLength[3] + " " + totalLength[3])
+           .attr("stroke-dashoffset", totalLength[3])
+           .transition()
+             .duration(4000)
+             .ease("linear")
+             .attr("stroke-dashoffset", 0);
+
+            d3.select(path[0][4])
+           .attr("stroke-dasharray", totalLength[4] + " " + totalLength[4])
+           .attr("stroke-dashoffset", totalLength[4])
+           .transition()
+             .duration(4000)
+             .ease("linear")
+             .attr("stroke-dashoffset", 0);
+
+
+            // labels area
+
+            var countArea = svg.append("g")
+               .attr("transform", "translate(250," + (height - 350) + ")");
+
+            var type = countArea.selectAll(".type")
+                 .data(companies)
+               .enter().append("g")
+                 .attr("class", "type");
+
+
+            var label = countArea.selectAll(".type")
+                .append("rect")
+                //.attr("class", "count")
+                .attr("x", 340)
+                .attr("y", function (d, i) { return ((i) * 30) + 19; })
+                .attr("width", "10")
+                .attr("height", "10")
+                .attr("fill", function (d, i) {
+                    return z(i);
+                })
+
+
+
+            var lastArr = ["132550", "24853", "1894", "8597", "14551"];
+
+            var label = countArea.selectAll(".type")
+                .append("text")
+                .attr("class", "count")
+                .attr("x", 455)
+                .attr("y", function (d, i) { return (i + 1) * 30; })
+                .text(function (d, i) {
+                    //console.log(d[d.name]);
+                    return d.name;
+                });
+
+            var label2 = countArea.selectAll(".type")
+                  .append("text")
+                  .attr("id", function (d, i) {
+                      return "count" + i;
+                  })
+                  .attr("class", "count")
+                  .attr("x", 370)
+                  .attr("y", function (d, i) { return (i + 1) * 30; })
+                  .text(function (d, i) {
+                      return "0"
+                  });
+
+
+            svg.append("text")
+                .attr("id", "yearVal")
+                .attr("class", "yearVal")
+                .attr("x", 680)
+                .attr("y", 280)
+                .text(1951);
+
+
+            //Append Title
+            svg.append("text")
+                .attr("class", "title")
+                .attr("x", 75)
+                .attr("y", 10)
+                .text("Vehicle Registrations by Year and Vehicle Type");
+
+
+            //call interpolate on all count strings
+
+            var lastArr2 = ["132550", "24853", "1894", "8597", "14551"];
+            
+
+            function setupStringInterpolation(selector, duration, text) {
+                selector
+                    .transition()
+                    .duration(duration)
+                    .tween("string", function () {
+                        var node = d3.select(this),
+                        i = d3.interpolateRound(node.text(), text);
+                        return function (t) {
+                            (node.text(i(t) + "k"));
+                        }
+                    });
+            }
+
+            for (var i = 0; i < lastArr2.length; i++) {
+                setupStringInterpolation(d3.select("#count"+i), 4000, lastArr2[i]);
+            }
+    
+
+            function setupStringInterpolationForYear(selector, duration, text) {
+                selector
+                    .transition()
+                    .duration(duration)
+                    .tween("string", function () {
+                        var node = d3.select(this),
+                        i = d3.interpolateString(node.text(), text);
+                        return function (t) {
+                            (node.text(Math.round(i(t))));
+                        }
+                    });
+            }
+
+            var final = "2013";
+            setupStringInterpolationForYear(d3.select(".yearVal"), 4000, final);
+        });
+
+
+
+    </script>
+
+    <!-- ga snippet -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-68492312-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</body>

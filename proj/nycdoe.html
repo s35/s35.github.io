@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>nycdoe high schools at a glance</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        /* all css here */
+        div.tooltip {
+            position: fixed;
+            text-align: left;
+            font-family: "Roboto", sans-serif;
+            white-space: normal;
+            padding: 6px;
+            font-size: 14px;
+            background: #eee;
+            border: 1px solid gray;
+            border-radius: 2px;
+            pointer-events: none;
+            cursor: none;
+            overflow: visible;
+            min-width: 200px;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #aaa;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font: 10px sans-serif;
+            fill: darkslategray;
+        }
+
+        body {
+            text-align: left;
+            font-family: 'Roboto', sans-serif !important;
+            width: 950px;
+            margin: 0 auto !important;
+        }
+
+        .button1 {
+            margin-right: 10px !important;
+            background-color: #f5f5f5 !important;
+        }
+
+        .button2 {
+            background-color: #f5f5f5 !important;
+        }
+
+            h1, h2, h3, h4, h5, h6{
+        font-family: 'Montserrat', sans-serif !important;
+    }
+    </style>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="../resources/JavaScript-autoComplete-master/auto-complete.css" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+
+
+
+<body>
+    <br>
+    <div>
+        <h2>NYC Public High Schools at a glance</h2>
+        <p style="font-size: 18px; display:inline;">
+            The graph below visualises data from <span style="display:inline; font-size: 22px;">440</span> public high schools under the <a href="http://schools.nyc.gov/default.htm" target="_blank">New York City Department of Education</a>. The data is accurate as of <span style="display:inline; font-size: 22px;">08/11/2016</span>.
+        </p>
+        <p>
+            See how high schools compare in graduation rate, attendance, enrollment and college career rate across the 5 boroughs.
+        </p>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-md-12" style="display:inline;">
+
+            <div class="btn-group" style="float:left;">
+                <button type="button" class="button1 btn btn-default" value="graduation_rate">Graduation Rate</button>
+                <button type="button" class="button1 btn btn-default" value="attendance_rate">Attendance Rate</button>
+                <button type="button" class="button1 btn btn-default" value="total_students">Enrollment</button>
+                <button type="button" class="button1 btn btn-default" value="college_career_rate">College Career Rate</button>
+            </div>
+            <div class="btn-group2" style="float:right;">
+                <div style="width: 300px;">
+                    <input name="q" placeholder="Enter School Name" id="q" value="" class="schoolInput form-control" />
+                </div>
+
+            </div>
+            <br /><br />
+
+
+            <div id="graph">
+
+            </div>
+            <div id="checkboxes" style="display:inline-block;">
+                <span>Click to hide/show:&nbsp;&nbsp;</span>
+                <label>
+                    <input type="checkbox" name="continent" value="X" checked>Bronx
+                    <span id="africaColor" style="font-size:15px;"><i class="fa fa-circle"></i>&nbsp;&nbsp;</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="continent" value="R" checked>Staten Island
+                    <span id="namericaColor" style="font-size:15px;"><i class="fa fa-circle"></i>&nbsp;&nbsp;</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="continent" value="Q" checked>Queens
+                    <span id="samericaColor" style="font-size:15px;"><i class="fa fa-circle"></i>&nbsp;&nbsp;</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="continent" value="M" checked>Manhattan
+                    <span id="asiaColor" style="font-size:15px;"><i class="fa fa-circle"></i>&nbsp;&nbsp;</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="continent" value="K" checked>Brooklyn
+                    <span id="europeColor" style="font-size:15px;"><i class="fa fa-circle"></i>&nbsp;&nbsp;</span>
+                </label>
+            </div>
+            <div style="display: inline-block; float: right;">
+                <a href="" id="resetBtn">Reset</a>
+            </div>
+            <div>
+                Note: Data is missing for some schools
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <p>Created by <a href="../index.html">Saurav Mohapatra</a></p>
+    <p>Data Source: <a href="https://data.cityofnewyork.us/Education/DOE-High-School-Directory-2017/s3k6-pzi2">https://data.cityofnewyork.us/Education/DOE-High-School-Directory-2017/s3k6-pzi2</a></p>
+    <p>Graph inspired by: <a href="https://gf.neocities.org/co2bs/co2bee.html">https://gf.neocities.org/co2bs/co2bee.html</a></p>
+    <br>
+
+    <!-- Jquery js -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../resources/JavaScript-autoComplete-master/auto-complete.min.js"></script>
+
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script type="text/javascript">
+
+        var w = 1000, h = 335;
+
+        var padding = [0, 60, 38, 10];
+
+        var xScale = d3.scaleLinear()
+            .range([padding[3], w - padding[1]]);
+
+        var xAxis = d3.axisBottom(xScale)
+            .ticks(10, ".0s")
+            .tickSizeOuter(0);
+
+        var colors = d3.scaleOrdinal()
+            .domain(["X", "R", "Q", "M", "K"])
+            .range(['#984ea3', '#e41a1c', '#4daf4a', '#377eb8', '#ff7f00']);
+
+        d3.select("#africaColor").style("color", colors("X"));
+        d3.select("#namericaColor").style("color", colors("R"));
+        d3.select("#samericaColor").style("color", colors("Q"));
+        d3.select("#asiaColor").style("color", colors("M"));
+        d3.select("#europeColor").style("color", colors("K"));
+
+        var formatNumber = d3.format(",");
+
+        var tt = d3.select("#graph").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        var svg = d3.select("#graph")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        //var xline = svg.append("line")
+        //    .attr("stroke", "gray")
+        //    .attr("stroke-dasharray", "1,2");
+
+        var chartState = {};
+
+        chartState.variable = "graduation_rate";
+        chartState.legend = "Graduation Rate";
+
+        d3.csv("../data/DOE_High_School_Directory_2017.csv", function (error, data) {
+            if (error) throw error;
+
+            data.forEach(function (d) {
+                d["graduation_rate"] = +(d["graduation_rate"] * 100).toFixed(2);
+                d["college_career_rate"] = +(d["college_career_rate"] * 100).toFixed(2);
+                d["attendance_rate"] = +(d["attendance_rate"] * 100).toFixed(2);
+            });
+
+            var dataSet = data;
+
+            //auto-complete start
+
+            new autoComplete({
+                selector: 'input[name="q"]',
+                minChars: 2,
+                source: function (term, suggest) {
+                    term = term.toLowerCase();
+                    var schoolNames = [];
+                    for (var k = 0; k < dataSet.length; k++) {
+                        schoolNames.push(dataSet[k].school_name);
+                    }
+                    var matches = [];
+                    for (i = 0; i < schoolNames.length; i++)
+                        if (~schoolNames[i].toLowerCase().indexOf(term)) matches.push(schoolNames[i]);
+                    suggest(matches);
+                }
+            });
+
+            //auto-complete end
+
+            xScale.domain(d3.extent(data, function (d) { return +((d.graduation_rate) * 100).toFixed(2); }));
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + (h - padding[2]) + ")")
+                .call(xAxis);
+
+            var legend = svg.append("text")
+                .attr("x", 5)
+                .attr("y", h - 50)
+                .attr("font-family", "Roboto")
+                .attr("font-size", 18)
+                .attr("fill", "darkslategray")
+                .attr("fill-opacity", 0.77)
+                .attr("class", "legend");
+
+            redraw(chartState.variable);
+
+            d3.selectAll(".button1").on("click", function () {
+                var thisClicked = this.value;
+                chartState.variable = thisClicked;
+                if (thisClicked == "graduation_rate") {
+                    chartState.legend = "Graduation Rate";
+                };
+                if (thisClicked == "attendance_rate") {
+                    chartState.legend = "Attendance Rate";
+                }
+                if (thisClicked == "total_students") {
+                    chartState.legend = "Enrollment";
+                }
+                if (thisClicked == "college_career_rate") {
+                    chartState.legend = "College Career Rate";
+                }
+                redraw(chartState.variable);
+            });
+
+            d3.selectAll(".button2").on("click", function () {
+                var thisClicked = this.value;
+                chartState.scale = thisClicked;
+                redraw(chartState.variable);
+            });
+
+            d3.selectAll("input").on("change", filter);
+
+            var countriesCircles;
+
+            // Redraw function
+
+            function redraw(variable, schoolHighlighted) {
+
+                if (chartState.legend === "Enrollment") { xScale = d3.scaleLog().range([padding[3], w - padding[1]]); }
+                else { xScale = d3.scaleLinear().clamp(true).range([padding[3], w - padding[1]]); }
+
+                xScale.domain(d3.extent(dataSet, function (d) { return +(d[variable]); }));
+
+                var xAxis = d3.axisBottom(xScale)
+                    .ticks(10, ".0s")
+                    .tickSizeOuter(0);
+
+                d3.transition(svg).select(".x.axis").transition().duration(1000)
+                    .call(xAxis);
+
+                var simulation = d3.forceSimulation(dataSet)
+                    .force("x", d3.forceX(function (d) { return xScale(+(d[variable])); }).strength(2))
+                    .force("y", d3.forceY((h / 2) - padding[2] / 2))
+                    .force("collide", d3.forceCollide(6.8))
+                    .stop();
+
+                for (var i = 0; i < 120; ++i) simulation.tick();
+
+                countriesCircles = svg.selectAll(".countries")
+                    .data(dataSet.filter(function (d) { return d[variable] != 0; }), function (d) { return d.school_name });
+
+                countriesCircles.exit()
+                    .transition()
+                    .delay(500)
+                    .duration(1000)
+                    .attr("cx", 0)
+                    .attr("cy", (h / 2) - padding[2] / 2)
+                    .remove();
+
+                countriesCircles.enter()
+                    .append("circle")
+                    .attr("class", "countries")
+                    .attr("cx", 0)
+                    .attr("cy", (h / 2) - padding[2] / 2)
+                    .attr("r", "4")
+                    .attr("fill", function (d) { return colors(d.boro); })
+                    .merge(countriesCircles)
+                    .transition()
+                    .delay(500)
+                    .duration(2000)
+                    .attr("cx", function (d) { return d.x; })
+                    .attr("cy", function (d) { return d.y; });
+
+
+                //
+
+                var schoolNode = d3.selectAll(".countries")
+                    .filter(function (d) { return d.school_name === schoolHighlighted; });
+
+                schoolNode
+                    .transition()
+                    .duration(2000)
+                    .attr("r", "6")
+                    .attr("fill", "yellow")
+                    .attr("stroke", "black")
+                    .attr("stroke-width", "2")
+                    .attr("cx", function (d) { return d.x; })
+                    .attr("cy", function (d) { return d.y; });
+
+                //
+
+                legend.text(chartState.legend);
+
+                function tooltipVal(val) {
+                    if (variable !== "total_students") {
+                        return val + "%";
+                    } else {
+                        return val;
+                    }
+                }
+
+                d3.selectAll(".countries").on("mousemove", function (d) {
+                    tt.html("School: <strong>" + d.school_name + "</strong><br>"
+                    + chartState.legend + ": <strong>" + tooltipVal(d[variable]) + "</strong>")
+                        .style('top', d3.event.pageY - 58 + 'px')
+                        .style('left', d3.event.pageX + 'px')
+                        .style("opacity", 0.9);
+
+                    //xline.attr("x1", d3.select(this).attr("cx"))
+                    //    .attr("y1", d3.select(this).attr("cy"))
+                    //    .attr("y2", (h - padding[2]))
+                    //    .attr("x2", d3.select(this).attr("cx"))
+                    //    .attr("opacity", 1);
+
+                }).on("mouseout", function (d) {
+                    tt.style("opacity", 0);
+                    //xline.attr("opacity", 0);
+                });
+            }
+
+            //filter by boro
+            function filter() {
+
+                function getCheckedBoxes(chkboxName) {
+                    var checkboxes = document.getElementsByName(chkboxName);
+                    var checkboxesChecked = [];
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        if (checkboxes[i].checked) {
+                            checkboxesChecked.push(checkboxes[i].defaultValue);
+                        }
+                    }
+                    return checkboxesChecked.length > 0 ? checkboxesChecked : null;
+                }
+
+                var checkedBoxes = getCheckedBoxes("continent");
+
+                var newData = [];
+
+                if (checkedBoxes == null) {
+                    dataSet = newData;
+                    redraw();
+                    return;
+                };
+
+                for (var i = 0; i < checkedBoxes.length; i++) {
+                    var newArray = data.filter(function (d) {
+                        return d.boro == checkedBoxes[i];
+                    });
+                    Array.prototype.push.apply(newData, newArray);
+                }
+
+                dataSet = newData;
+
+                redraw(chartState.variable);
+            }
+
+            // IE and Edge don't like JQuery.
+
+            $("#q").on("change", function () {
+                var schoolSelected = this.value;
+                console.log(schoolSelected);
+                $("#q").val('');
+                redraw(chartState.variable, schoolSelected);
+            });
+
+            //reset graph
+            $('#resetBtn').on("click", function () {
+                redraw("graduation_rate", null);
+            });
+
+        });
+
+    </script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-68492312-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
