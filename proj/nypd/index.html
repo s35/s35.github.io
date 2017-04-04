@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+    <style>
+        body {
+            text-align: left;
+            font-family: 'Roboto', sans-serif !important;
+            width: 950px;
+            margin: 0 auto !important;
+        }
+
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
+        .zipcodes:hover {
+            stroke: black;
+            stroke-width: 1px;
+        }
+
+        .legend-text {
+            font-size: 12px;
+            opacity: 0.69;
+        }
+
+        .vals {
+            font-size: 22px;
+            opacity: 0.69;
+        }
+    </style>
+
+
+</head>
+<body>
+
+    <h2>Motor Vehicle Collisions in NYC by zip code </h2>
+
+
+    <p style="display:inline;">
+        This choropleth map of New York City shows the number of motor vehicle collisions (fatal and non-fatal) by zip code. This dataset has entries starting from <h5 style="display:inline;">07/01/2012</h5> and ending on <h5 style="display:inline;">03/13/2017</h5>; almost 5 years worth of data. This dataset is maintained by the <h5 style="display:inline;"><a href="http://www.nyc.gov/html/nypd/html/home/home.shtml" target="_blank">NYPD</a></h5>.
+    </p>
+    <p>It looks like parts of midtown Manhattan are hotspots, along with areas in Brooklyn and Queens, west of JFK. Long Island City in Queens also stands out with a very high count. The highest count goes to zipcode 11207 in Brooklyn.</p>
+ 
+
+    <hr />
+    <div id="map">
+
+    </div>
+
+    <hr />
+    <p>
+        Created by: <a href="../../index.html">Saurav Mohapatra</a><br />
+    </p>
+    <p>
+        Data Source: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions/h9gi-nx95" target="_blank">https://data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions/h9gi-nx95</a>
+    </p>
+    <p>
+        Disclaimer: This map visualizes a subset of the complete dataset linked above. Only collision events with valid zipcodes associated with them were used. This subset spans (80%)+ of the complete dataset.
+    </p>
+
+
+
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+
+    <script>
+
+        var width = 1100,
+            height = 800;
+
+        var svg = d3.select("#map").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        //var color = d3.scale.linear()
+        //    .range(['steelblue', 'lightgreen', 'darkgreen'])
+        //    .domain([-10000, 60000, 150000]);
+
+        var color = d3.scale.threshold()
+           .domain([1500, 3000, 4500, 6000, 7500, 9000, 10500, 13000])
+           .range(["#F1C0C0", "#ECAEAC", "#E79C99", "#E28A86", "#DD7873", "#D86660", "#D3544C", "#CE4239", "#C93026"
+               ]);
+
+
+
+        //add legend here
+        var data1 = [1500, 3000, 4500, 6000, 7500, 9000, 10500, 13000];
+
+        svg.append("g")
+            .attr("id", "legend")
+            .selectAll("legend")
+            .data(data1)
+        .enter()
+            .append("rect")
+            .attr("x", 500)
+            .attr("y", function (d, i) { return ((16 * i) + 25); })
+            .attr("width", 30)
+            .attr("height", 15)
+            .attr("fill", function (d) {
+                return color(d);
+            });
+
+
+        svg.append("g")
+          .selectAll("legend")
+          .data(data1)
+          .enter()
+          .append("text")
+          .attr("class", "legend-text")
+          .attr("x", 535)
+          .attr("y", function (d, i) { return ((16 * i) + 37); })
+          .text(function (d) {
+              return d / 1000 + "k+";
+          });
+
+        var val = svg
+                    .append("text")
+                    .attr("class", "vals")
+                    .text("Count: ")
+                    .attr("x", "20")
+                    .attr("y", "100");
+
+
+        var areaVal = svg
+                    .append("text")
+                    .attr("class", "vals")
+                    .text("Area: ")
+                    .attr("x", "20")
+                    .attr("y", "130");
+
+
+        var zipVal = svg
+                    .append("text")
+                    .attr("class", "vals")
+                    .text("Zip: ")
+                    .attr("x", "20")
+                    .attr("y", "160");
+
+
+
+        var projection = d3.geo.albers()
+         .center([0, 40.7])
+         .rotate([74, 0])
+         .translate([width / 2, height / 2])
+         .scale(100000);
+
+        var path = d3.geo.path()
+            .projection(projection);
+
+        var income = d3.map();
+
+        d3.json("nyc-zip-codes.json", function (error, data) {
+            if (error) return console.error(error);
+
+            d3.csv("counts.csv", function (error, counts) {
+                var nycObj = data.objects[Object.keys(data.objects)[0]];
+
+
+                counts.sort(function (a, b) { return b.count - a.count; });
+
+                console.log(counts);
+
+                var lookup = {};
+                counts.forEach(function (d) {
+                    lookup[d.zipcode] = +d.count;
+                })
+
+                // add each feature
+                svg.selectAll("path")
+                   .data(topojson.feature(data, nycObj).features)
+                   .enter()
+                   .append('path')
+                   .attr("class", "zipcodes")
+                   .attr('fill', function (d) {
+                       if (lookup[parseInt(d.properties.postalCode)]) {
+                           return color(lookup[parseInt(d.properties.postalCode)]);
+                       }
+                       else {
+                           return "grey";
+                       }
+
+                   })
+                   .attr("d", path)
+                   .on('mouseover', function (d) {
+                       //console.log(d);
+                       var currentState = this;
+                       d3.select(this).style('fill-opacity', 0.90);
+                       val.text("Count: " + lookup[parseInt(d.properties.postalCode)]);
+                       areaVal.text("Area: " + d.properties.PO_NAME);
+                       zipVal.text("Zip Code: " + d.properties.postalCode);
+                   })
+                    .on('mouseout', function (d, i) {
+                        d3.selectAll('path')
+                                .style({
+                                    'fill-opacity': 1
+                                });
+                    });
+            })
+        });
+
+    </script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-68492312-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</body>

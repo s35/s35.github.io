@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <style>
+        body {
+            text-align: left;
+            font-family: 'Roboto', sans-serif !important;
+            width: 950px;
+            margin: 0 auto !important;
+        }
+
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
+
+        .counties {
+            fill: steelblue;
+        }
+
+        .states {
+            fill: steelblue;
+            stroke: #fff;
+            stroke-linejoin: round;
+        }
+    </style>
+</head>
+<body>
+    <h3>
+        UFO Sightings across the US (Reported - 2016)
+    </h3>
+    <div class="row">
+        <div class="col-md-12">
+            <br />
+            <svg width="960" height="600"></svg>
+        </div>
+    </div>
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- d3 v4 -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+
+    <script type="text/javascript">
+
+        var svg = d3.select("svg"),
+            width = +svg.attr("width"),
+            height = +svg.attr("height");
+
+        var events = d3.map();
+
+        var path = d3.geoPath();
+
+        var x = d3.scaleLinear()
+            .domain([1, 10])
+            .rangeRound([600, 860]);
+
+        var color = d3.scaleThreshold()
+                .domain([50, 100, 150, 200, 250])
+                .range(["#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f"]);
+
+        //var g = svg.append("g")
+        //    .attr("class", "key")
+        //    .attr("transform", "translate(0,40)");
+
+        //g.selectAll("rect")
+        //  .data(color.range().map(function (d) {
+        //      d = color.invertExtent(d);
+        //      if (d[0] == null) d[0] = x.domain()[0];
+        //      if (d[1] == null) d[1] = x.domain()[1];
+        //      return d;
+        //  }))
+        //  .enter().append("rect")
+        //    .attr("height", 8)
+        //    .attr("x", function (d) { return x(d[0]); })
+        //    .attr("width", function (d) { return x(d[1]) - x(d[0]); })
+        //    .attr("fill", function (d) { return color(d[0]); });
+
+        //g.append("text")
+        //    .attr("class", "caption")
+        //    .attr("x", x.range()[0])
+        //    .attr("y", -6)
+        //    .attr("fill", "#000")
+        //    .attr("text-anchor", "start")
+        //    .attr("font-weight", "bold")
+        //    .text("Sightings reported");
+
+        //g.call(d3.axisBottom(x)
+        //    .tickSize(13)
+        //    .tickFormat(function (x, i) { return i ? x : x + "%"; })
+        //    .tickValues(color.domain()))
+        //  .select(".domain")
+        //    .remove();
+
+        d3.queue()
+            .defer(d3.json, "https://d3js.org/us-10m.v1.json")
+            .defer(d3.tsv, "us-state-names.tsv")
+            .defer(d3.csv, "counts.csv", function (d) {    
+                events.set(d.state, +d.count);
+            })
+            .await(ready);
+
+        function ready(error, us, stateData, countData) {
+            if (error) throw error;
+
+            svg.append("g")
+                .attr("class", "counties")
+              .selectAll("path")
+              .data(topojson.feature(us, us.objects.states).features)
+              .enter().append("path")
+                .attr("fill", function (d, i) {
+                    //console.log(stateData[i].id);
+                    //if (d.id === stateData[i].id) {
+                    //    console.log(stateData[i].id);
+                    //}
+                    return color(d.id);
+                })
+                .attr("d", path)
+              .append("title")
+                .text(function (d) { return d.count + "%"; });
+
+            svg.append("path")
+                .datum(topojson.mesh(us, us.objects.states, function (a, b) { return a !== b; }))
+                .attr("class", "states")
+                .attr("d", path);
+        }
+
+
+
+    </script>
+
+
+
+</body>

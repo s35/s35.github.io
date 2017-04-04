@@ -1,0 +1,428 @@
+﻿<!DOCTYPE html>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<style>
+    /* all css here */
+    .xaxis {
+        font: 10px sans-serif;
+    }
+
+        .xaxis path,
+        .xaxis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+    .active {
+        background-color: #f5f5f5 !important;
+    }
+
+    path {
+        stroke: steelblue;
+        stroke-width: 2;
+        fill: none;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .show {
+        display: normal;
+    }
+
+    body {
+        text-align: left;
+        font-family: 'Roboto', sans-serif !important;
+        width: 950px;
+        margin: 0 auto !important;
+    }
+
+    .bar {
+        fill: steelblue;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #D4D8DA;
+        stroke-width: 1px;
+        shape-rendering: crispEdges;
+    }
+
+    .x path {
+        display: none;
+    }
+
+    .toolTip {
+        position: absolute;
+        display: none;
+        min-width: 80px;
+        height: auto;
+        background: none repeat scroll 0 0 #ffffff;
+        border: 1px solid #6F257F;
+        padding: 14px;
+        text-align: center;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Montserrat', sans-serif !important;
+    }
+
+    text.value {
+        font-size: 100%;
+        fill: white;
+    }
+
+    .tick text {
+        font-family: 'Montserrat', sans-serif !important;
+        font-size: 120%;
+    }
+</style>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<body>
+    <br>
+    <div>
+        <h2 style="font-family: 'Montserrat', sans-serif;">Complaints to the Consumer Financial Protection Bureau</h2>
+        <p style="font-size: 18px;">
+            The <a href="https://www.cfpb.gov" target="_blank">Consumer Financial Protection Bureau (CFPB)</a> is an agency of the United States government responsible for consumer protection in the financial sector. Recently, it has come under a lot of media attention as many political elements have tried to shut it down or curtail its power .
+        </p>
+        <p style="font-size: 15px;">
+            While the politicians decide the future of CFPB, lets look at the complaints they have received over the years and what actions they have taken in response.
+        </p>
+    </div>
+
+
+    <hr />
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <p style="font-family: 'Montserrat', sans-serif !important; display:inline;">Below is a summary of complaints <h4 style="display: inline;">(691,215)</h4> received by the CFPB between <h4 style="display: inline;">12/01/2011</h4> and <h4 style="display: inline;">12/30/2016</h4>.</p>
+            <h3>Who are these complains about?</h3>
+            <p>Lets look at the top 10 offenders. Bank of America leads the list with 62,777 complaints. You can also see the 3 major credit reporting agencies. I am not surprised at all. I, myself had problems with 1 (Equifax) when they added credit cards to my credit report that were not mine. Resolving the issue was tedious and took me around 2 months.</p>
+            <div id="graph2">
+
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>What are these complaints about?</h3>
+            <p>Mortgage leads the list with 214626 complaints related to it.</p>
+            <div id="graph1">
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <br /><br />
+
+
+    <h3>What actions did CFPB take?</h3>
+    <p>Some are listed below: </p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5><a href="http://www.uspirg.org/blogs/eds-blog/usp/cfpb-slams-two-credit-bureaus-deceptive-marketing-expect-experian-next" target="_blank">Experian</a></h5>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5><a href="https://www.consumerfinance.gov/about-us/newsroom/cfpb-capital-one-probe/" target="_blank">Capital One</a></h5>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5><a href="https://www.consumerfinance.gov/about-us/newsroom/cfpb-orders-ge-capital-to-pay-225-million-in-consumer-relief-for-deceptive-and-discriminatory-credit-card-practices/" target="_blank">Synchrony Bank <br />(Previously GE Capital)</a></h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5><a href="https://www.consumerfinance.gov/about-us/newsroom/consumer-financial-protection-bureau-fines-wells-fargo-100-million-widespread-illegal-practice-secretly-opening-unauthorized-accounts/" target="_blank">Wells Fargo</a></h5>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5><a href="https://www.consumerfinance.gov/about-us/newsroom/cfpb-orders-american-express-to-pay-59-5-million-for-illegal-credit-card-practices/" target="_blank">American Express</a></h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5><a href="https://www.consumerfinance.gov/about-us/newsroom/cfpb-orders-citi-subsidiaries-pay-288-million-giving-runaround-borrowers-trying-save-their-homes/" target="_blank">Citibank</a></h5>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5><a href="https://www.consumerfinance.gov/about-us/newsroom/cfpb-orders-chase-and-jpmorgan-chase-to-pay-309-million-refund-for-illegal-credit-card-practices/" target="_blank">JP Morgan Chase</a></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <h3>My 2 cents</h3>
+    <p>Please don't shut the CFPB down.</p>
+
+    <hr />
+
+    <p>Created by: <a href="../../index.html">Saurav Mohapatra</a></p>
+    <p>Data Source: <a href="https://catalog.data.gov/dataset/consumer-complaint-database">https://catalog.data.gov/dataset/consumer-complaint-database</a></p>
+    <br>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script type="text/javascript">
+
+        function drawGraph1(data) {
+
+            data.sort(function (a, b) { return a.complaintsCount - b.complaintsCount; });
+
+            // set the dimensions and margins of the graph
+            var margin = { top: 20, right: 100, bottom: 50, left: 80 },
+                width = 800 - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
+
+            var svg = d3.select("#graph1").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+            var x = d3.scaleLinear().range([0, width]);
+            var y = d3.scaleBand().range([height, 0]);
+
+            var g = svg.append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            x.domain([0, d3.max(data, function (d) { return d.complaintsCount; })]);
+            y.domain(data.map(function (d) { return d.productName; })).padding(0.1);
+
+            g.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x).ticks(5).tickSizeInner([-height]));
+
+            g.append("g")
+                .attr("class", "y axis")
+                .call(d3.axisLeft(y));
+
+            g.selectAll(".bar")
+                .data(data)
+              .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", 0)
+                .attr("height", y.bandwidth())
+                .attr("y", function (d) { return y(d.productName); })
+                .attr("width", function (d) { return x(d.complaintsCount); })
+                .on("mousemove", function (d) {
+                    tooltip
+                      .style("left", d3.event.pageX - 50 + "px")
+                      .style("top", d3.event.pageY - 70 + "px")
+                      .style("display", "inline-block")
+                      .html((d.productName) + "<br>" + "Count: " + (d.complaintsCount));
+                })
+                    .on("mouseout", function (d) { tooltip.style("display", "none"); });
+        }
+
+        function drawGraph2(data) {
+
+            data.sort(function (a, b) { return a.complaintsCount - b.complaintsCount; });
+
+            // set the dimensions and margins of the graph
+            var margin = { top: 20, right: 100, bottom: 50, left: 80 },
+                width = 800 - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
+
+            var svg = d3.select("#graph2").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+            var x = d3.scaleLinear().range([0, width]);
+            var y = d3.scaleBand().range([height, 0]);
+
+            var g = svg.append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            x.domain([0, d3.max(data, function (d) { return d.complaintsCount; })]);
+            y.domain(data.map(function (d) { return d.companyName; })).padding(0.1);
+
+            g.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x).ticks(5).tickSizeInner([-height]));
+
+            g.append("g")
+                .attr("class", "y axis")
+                .call(d3.axisLeft(y).tickFormat(""));
+
+            g.selectAll(".bar")
+                .data(data)
+              .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", 0)
+                .attr("height", y.bandwidth())
+                .attr("y", function (d) { return y(d.companyName); })
+                .attr("width", function (d) { return x(d.complaintsCount); })
+            .on("mousemove", function (d) {
+                tooltip
+                  .style("left", d3.event.pageX - 50 + "px")
+                  .style("top", d3.event.pageY - 70 + "px")
+                  .style("display", "inline-block")
+                  .html((d.companyName));
+            })
+                .on("mouseout", function (d) { tooltip.style("display", "none"); });
+
+            g.selectAll(".values")
+                .data(data)
+               .enter().append("text")
+                 .attr("class", "value")
+                 .attr("x", function (d) {
+                     return x(d.complaintsCount) - 45;
+                 })
+                 .attr("y", function (d) {
+                     return y(d.companyName) + 20;
+                 })
+                 .text(function (d) {
+                     return (d.complaintsCount);
+                 });
+
+            //append all logos to svg (x*32)
+
+
+            svg
+               .append("svg:image")
+               .attr("xlink:href", "../cfpb/logos/bank-of-america-logo.jpg")
+               .attr("x", -27)
+               .attr("y", -10)
+               .attr("width", "100")
+               .attr("height", "95");
+
+            svg
+              .append("svg:image")
+              .attr("xlink:href", "../cfpb/logos/wells-fargo-logo.jpg")
+              .attr("x", 20)
+              .attr("y", 50)
+              .attr("width", "30")
+              .attr("height", "35");
+
+            svg
+               .append("svg:image")
+               .attr("xlink:href", "../cfpb/logos/1024px-Equifax.svg.png")
+               .attr("x", 2)
+               .attr("y", 70)
+               .attr("width", "60")
+               .attr("height", "65");
+
+            svg
+               .append("svg:image")
+               .attr("xlink:href", "../cfpb/logos/experian_logo.png")
+               .attr("x", 2)
+               .attr("y", 102)
+               .attr("width", "60")
+               .attr("height", "65");
+
+
+
+            svg
+              .append("svg:image")
+              .attr("xlink:href", "../cfpb/logos/logo.svg")
+              .attr("x", -15)
+              .attr("y", 155)
+              .attr("width", "80")
+              .attr("height", "75");
+
+            svg
+              .append("svg:image")
+              .attr("xlink:href", "../cfpb/logos/1200262f5591b8fd7ee91c6384b96ef3.png")
+              .attr("x", -18)
+              .attr("y", 128)
+              .attr("width", "80")
+              .attr("height", "75");
+
+            svg
+              .append("svg:image")
+              .attr("xlink:href", "../cfpb/logos/Citibank-logo.png")
+              .attr("x", -7)
+              .attr("y", 200)
+              .attr("width", "80")
+              .attr("height", "65");
+
+
+            svg
+              .append("svg:image")
+              .attr("xlink:href", "../cfpb/logos/Ocwen_Logo.png")
+              .attr("x", 5)
+              .attr("y", 249)
+              .attr("width", "60")
+              .attr("height", "28");
+
+
+            svg
+              .append("svg:image")
+              .attr("xlink:href", "../cfpb/logos/Capital_One.svg")
+              .attr("x", -5)
+              .attr("y", 285)
+              .attr("width", "60")
+              .attr("height", "25");
+
+            svg
+              .append("svg:image")
+              .attr("xlink:href", "../cfpb/logos/nationstar-mortgage_logo_1839.png")
+              .attr("x", -15)
+              .attr("y", 314)
+              .attr("width", "80")
+              .attr("height", "35");
+
+
+        }
+
+
+        var data =
+            [{ "complaintsCount": 214626, "productName": "Mortgage" }, { "complaintsCount": 129156, "productName": "Debt collection" }, { "complaintsCount": 122964, "productName": "Credit reporting" }, { "complaintsCount": 81448, "productName": "Credit card" }, { "complaintsCount": 78664, "productName": "Bank account or service" }, { "complaintsCount": 27759, "productName": "Consumer Loan" }, { "complaintsCount": 22502, "productName": "Student loan" }, { "complaintsCount": 5016, "productName": "Payday loan" }, { "complaintsCount": 4872, "productName": "Money transfers" }, { "complaintsCount": 3321, "productName": "Prepaid card" }, { "complaintsCount": 872, "productName": "Other financial service" }, { "complaintsCount": 15, "productName": "Virtual currency" }];
+
+
+
+        var companyData = [{ "complaintsCount": 62777, "companyName": "Bank of America" }, { "complaintsCount": 50197, "companyName": "Wells Fargo \u0026 Company" }, { "complaintsCount": 43107, "companyName": "Equifax" }, { "complaintsCount": 40717, "companyName": "Experian" }, { "complaintsCount": 39914, "companyName": "JPMorgan Chase \u0026 Co." }, { "complaintsCount": 34908, "companyName": "TransUnion Intermediate Holdings, Inc." }, { "complaintsCount": 32093, "companyName": "Citibank" }, { "complaintsCount": 23233, "companyName": "Ocwen" }, { "complaintsCount": 18613, "companyName": "Capital One" }, { "complaintsCount": 15294, "companyName": "Nationstar Mortgage" }];
+
+        //call draw funcs
+
+        drawGraph1(data);
+
+        drawGraph2(companyData);
+
+
+    </script>
+</body>
