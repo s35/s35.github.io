@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<style>
+	body {
+		text-align: left;
+		font-family: 'Roboto', sans-serif !important;
+		width: 950px;
+		margin: 0 auto !important;
+	}
+
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family: 'Montserrat', sans-serif !important;
+	}
+
+	.line {
+		fill: none;
+		stroke: steelblue;
+		stroke-width: 1.5px;
+	}
+
+</style>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+
+<body>
+<br />
+	<h2 style="display: inline;">NYC-DHS Shelter Residents</h2><h5 style="display: inline;"> (Updated Daily)</h5>
+	<p>
+		Secondary text
+	</p>
+	<hr />
+	<p>Data Updated: <span id="last_updated_date"></span></p>
+	<div id="graph">
+
+	</div>
+
+
+	<hr />
+
+	<p>Created by: <a href="../../index.html">Saurav Mohapatra</a></p>
+	<p>Data Source: <a href="https://data.cityofnewyork.us/Social-Services/DHS-Daily-Report/k46n-sa2m/data">https://data.cityofnewyork.us/Social-Services/DHS-Daily-Report/k46n-sa2m/data</a></p>
+	<br>
+
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+	integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+
+	<script type="text/javascript">
+
+
+		var data_url = "https://data.cityofnewyork.us/api/views/k46n-sa2m/rows.csv";
+
+
+		// set the dimensions and margins of the graph
+		var margin = {top: 20, right: 150, bottom: 30, left: 50},
+		width = 750 - margin.left - margin.right,
+		height = 400 - margin.top - margin.bottom;
+
+// parse the date / time
+var parseTime = d3.timeParse("%m/%d/%Y");
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// define the 1st line
+var valueline = d3.line()
+.x(function(d) { return x(d.date); })
+.y(function(d) { return y(d.adults); })
+.defined(function(d) { return d.date !== null; });
+
+// define the 2nd line
+var valueline2 = d3.line()
+.x(function(d) { return x(d.date); })
+.y(function(d) { return y(d.children); })
+.defined(function(d) { return d.date !== null; });
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("#graph").append("svg")
+.attr("width", width + margin.left + margin.right)
+.attr("height", height + margin.top + margin.bottom)
+.append("g")
+.attr("transform",
+	"translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+d3.csv("https://data.cityofnewyork.us/api/views/k46n-sa2m/rows.csv", function(error, data) {
+	if (error) throw error;
+
+  // format the data
+  data.forEach(function(d) {
+  	d.date = parseTime(d["Date of Census"]);
+  	d.adults = +d["Total Adults in Shelter"];
+  	d.children = +d["Total Children in Shelter"];
+  });
+
+  //console.log(data);
+
+  // Scale the range of the data
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+
+  y.domain([0, d3.max(data, function(d) {
+  	return Math.max(d.adults, d.children); })]);
+
+  // Add the valueline path.
+  svg.append("path")
+  .data([data])
+  .attr("class", "line")
+  .attr("d", valueline);
+
+  // Add the valueline2 path.
+  svg.append("path")
+  .data([data])
+  .attr("class", "line")
+  .style("stroke", "red")
+  .attr("d", valueline2);
+
+  // Add the X Axis
+  svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x));
+
+  // Add the Y Axis
+  svg.append("g")
+  .call(d3.axisLeft(y));
+
+  svg.append("text")
+  .attr("transform", "translate("+(width+3)+","+y(data[data.length - 1].adults)+")")
+  .attr("dy", ".35em")
+  .attr("text-anchor", "start")
+  .style("fill", "steelblue")
+  .text("Adults (" + data[data.length - 1].adults + ")");
+
+  svg.append("text")
+  .attr("transform", "translate("+(width+3)+","+y(data[data.length - 1].children)+")")
+  .attr("dy", ".35em")
+  .attr("text-anchor", "start")
+  .style("fill", "red")
+  .text("Children (" + data[data.length - 1].children + ")");
+
+  document.getElementById("last_updated_date").innerHTML = (data[data.length - 1].date).toLocaleDateString();
+
+});
+
+
+
+</script>
+
+</body>
+
+
+
+
+
+
+
+
+
+
