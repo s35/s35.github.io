@@ -155,16 +155,16 @@
 
         var income = d3.map();
 
-        d3.json("../nypd/nyc-zip-codes.json", function (error, data) {
+        d3.json("../proj/nypd/nyc-zip-codes.json", function (error, data) {
             if (error) return console.error(error);
 
-            d3.csv("../nypd/counts.csv", function (error, counts) {
+            d3.csv("../proj/nypd/counts.csv", function (error, counts) {
                 var nycObj = data.objects[Object.keys(data.objects)[0]];
 
 
                 counts.sort(function (a, b) { return b.count - a.count; });
 
-                console.log(counts);
+                //console.log(counts);
 
                 var lookup = {};
                 counts.forEach(function (d) {
