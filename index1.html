@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="Saurav Mohapatra">
+
+	<title>Saurav Mohapatra</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+	<!-- Bootstrap Core CSS -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+	<!-- Google Material Design Font -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+	<!-- Index CSS -->
+	<link href="../css/site.css" rel="stylesheet">
+
+	<!-- font awesome css -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
+
+	<!-- Slick Carousel CSS -->
+	<link href="/resources/slick-1.6.0/slick/slick.css" rel="stylesheet"></link>
+	<link href="/resources/slick-1.6.0/slick/slick-theme.css" rel="stylesheet"></link>
+
+
+	<style type="text/css">
+		.container1 {
+			margin: 0 auto;
+			padding: 31px;
+			width: 100%;
+			color: #333;
+			background: #11608d;
+		}
+
+		.container2{
+			margin: 0 auto;
+			padding: 10px;
+			width: 100%;
+		}
+
+		.single-item img {
+			width: 150px;
+			height: 125px;
+			border-radius: 5px;
+		}
+
+		#content {
+			font-family: 'Roboto', sans-serif !important;
+			width: 980px !important;
+			margin: 0 auto !important;
+		}
+
+		.project{
+			cursor: pointer;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<div class="container2">
+		<h3 style="display: inline;">Saurav Mohapatra</h3>
+		<h5 style="display: inline; float: right;">Data, Visualization & the Web</h5>
+	</div>
+
+	<div class="container1">
+		<div class='single-item'>
+			<div class="project" id="cfpb" ><img src="screens/Capture1.PNG" /> </div>
+			<div class="project" id="nycdoe"> <img src="screens/Capture2.PNG" /> </div>
+			<div class="project" id="indrmv"> <img src="screens/Capture3.PNG" /> </div>
+			<div class="project" id="ufo"> <img src="screens/Capture4.PNG" /> </div>
+			<div class="project" id="nypd"> <img  src="screens/Capture5.PNG" /> </div>
+	<!-- 		<div class="project" id="dhs"> <img src="#" /> </div>
+			<div class="project" id="gdp"><img src="#" /> </div>
+			<div class="project" id="carbon"> <img src="#" /> </div>
+			<div class="project" id="music"><img src="#" /> </div>			
+			<div class="project" id="new1"> <img src="#" /> </div>
+			<div class="project" id="new2"><img src="#" /> </div> -->
+		</div>
+	</div> 
+
+	<div id="content"></div>
+
+
+	<br/>
+
+</div>
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- Slick Carousel -->
+<script src="/resources/slick-1.6.0/slick/slick.min.js"></script>
+
+
+<script type="text/javascript">
+	
+
+	//Slick Carousel
+	$(".single-item").slick({
+		slidesToShow: 7,
+		slidesToScroll: 1,
+		centerMode: true,
+		infinite: true,
+		centerPadding: '114px',
+		responsive: [
+		{
+			breakpoint: 1024,
+			settings: {
+				slidesToShow: 3,
+				slidesToScroll: 3,
+				infinite: true,
+				dots: true
+			}
+		},
+		{
+			breakpoint: 600,
+			settings: {
+				slidesToShow: 2,
+				slidesToScroll: 2
+			}
+		},
+		{
+			breakpoint: 480,
+			settings: {
+				slidesToShow: 1,
+				slidesToScroll: 1
+			}
+		}]
+	});
+
+	// URL Nav
+
+	//On Page Load, check URL
+	var url = window.location.href;
+	if (url.includes("proj=")){
+		//route based on ID
+		var param = "proj=";
+		var n=url.lastIndexOf("proj=");
+ 		var id = (url.substring(n+param.length,url.length));
+		$("#content").load("/proj/" + id + "/index.html");
+	}	else{
+	   //Default Project Load
+		$("#content").load("/proj/nycdoe/index.html");
+	}
+
+	//New Project Click Event
+	$(".project").on("click", function(){
+		var id = $(this).attr("id");
+		$("#content").load("../proj/" + id + "/" + "index.html", function(){
+			var url = window.location.href;
+			var n = url.indexOf('?');
+			url = url.substring(0, n != -1 ? n : url.length);
+			window.location.href = url + "?proj=" + id;
+		});
+	});
+
+</script>
+
+<script>
+	(function (i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+			(i[r].q = i[r].q || []).push(arguments)
+		}, i[r].l = 1 * new Date(); a = s.createElement(o),
+		m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+	})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+	ga('create', 'UA-68492312-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+</body>
+</html>

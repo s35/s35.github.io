@@ -10,7 +10,6 @@
 		margin: 0 auto !important;
 	}
 
-
 	h1, h2, h3, h4, h5, h6 {
 		font-family: 'Montserrat', sans-serif !important;
 	}
@@ -25,52 +24,70 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
-  <!-- font awesome css -->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
+<!-- font awesome css -->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
 
 <body>
-<br />
-	<h2 style="display: inline;">NYC-DHS Shelter Residents</h2>
-	<p>
+  <br />
+  <h2 style="display: inline;">New York City - Department of Homeless Services</h2>
+  <h5>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</h5>
+  <hr />
+  
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Why DHS?</h3>
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+      <br/>
+      It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+    </div>
+    <div class="col-md-6">
+      <iframe width="100%" height="310" src="https://www.youtube.com/embed/E5xpaoA-lcg?autoplay=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+  <p>
 
-	</p>
-	<hr />
+  </p>
+  <hr />
 
-	<div id="graph">
+  <h3 style="display: inline;">Current Shelter Residents</h3> 
 
-	</div>
+  <div style="float: right;"><i class="fa fa-circle" style="color: lightgreen; display: inline;"></i>&nbsp;Updated: <span id="last_updated_date"></span></div>  
 
-		<p><i class="fa fa-circle" style="color: lightgreen;"></i>&nbsp;Updated: <span id="last_updated_date"></span></p>
-	<hr />
-
-	<p>Created by: <a href="../../index.html">Saurav Mohapatra</a></p>
-	<p>Data Source: <a href="https://data.cityofnewyork.us/Social-Services/DHS-Daily-Report/k46n-sa2m/data">https://data.cityofnewyork.us/Social-Services/DHS-Daily-Report/k46n-sa2m/data</a></p>
-	<br>
-
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-	integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-	crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <div id="graph"></div>
 
 
-	<script src="https://d3js.org/d3.v4.min.js"></script>
+  <p></p>
+    <h6>Disclaimer: spikes in the data are possibly data entry errors</h6>
+  <hr />
 
-	<script type="text/javascript">
+  <p>Created by: <a href="../../index.html">Saurav Mohapatra</a></p>
+  <p>Data Source: <a href="https://data.cityofnewyork.us/Social-Services/DHS-Daily-Report/k46n-sa2m/data">https://data.cityofnewyork.us/Social-Services/DHS-Daily-Report/k46n-sa2m/data</a></p>
+  <br>
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
-		var data_url = "https://data.cityofnewyork.us/api/views/k46n-sa2m/rows.csv";
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  <script type="text/javascript">
+
+
+    var data_url = "https://data.cityofnewyork.us/api/views/k46n-sa2m/rows.csv";
 
 
 		// set the dimensions and margins of the graph
 		var margin = {top: 20, right: 150, bottom: 30, left: 50},
-		width = 650 - margin.left - margin.right,
-		height = 350 - margin.top - margin.bottom;
+		width = 900 - margin.left - margin.right,
+		height = 300 - margin.top - margin.bottom;
 
 // parse the date / time
 var parseTime = d3.timeParse("%m/%d/%Y");
 
 // set the ranges
-var x = d3.scaleTime().range([0, width]);
+var x = d3.scaleTime().range([0, width - 250]);
 var y = d3.scaleLinear().range([height, 0]);
 
 // define the 1st line
@@ -96,17 +113,18 @@ var svg = d3.select("#graph").append("svg")
 	"translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.csv("https://data.cityofnewyork.us/api/views/k46n-sa2m/rows.csv", function(error, data) {
+d3.csv(data_url, function(error, data) {
 	if (error) throw error;
 
   // format the data
   data.forEach(function(d) {
-  	d.date = parseTime(d["Date of Census"]);
-  	d.adults = +d["Total Adults in Shelter"];
-  	d.children = +d["Total Children in Shelter"];
+    d.totalResidents =+ d["Total Individuals in Shelter"];
+    d.date = parseTime(d["Date of Census"]);
+    d.adults = +d["Total Adults in Shelter"];
+    d.children = +d["Total Children in Shelter"];
   });
 
-  //console.log(data);
+  console.log(data[data.length - 1]);
 
   // Scale the range of the data
   x.domain(d3.extent(data, function(d) { return d.date; }));
@@ -138,14 +156,14 @@ d3.csv("https://data.cityofnewyork.us/api/views/k46n-sa2m/rows.csv", function(er
   .call(d3.axisLeft(y));
 
   svg.append("text")
-  .attr("transform", "translate("+(width+3)+","+y(data[data.length - 1].adults)+")")
+  .attr("transform", "translate("+(width+3 - 250)+","+y(data[data.length - 1].adults)+")")
   .attr("dy", ".35em")
   .attr("text-anchor", "start")
   .style("fill", "steelblue")
   .text("Adults (" + data[data.length - 1].adults + ")");
 
   svg.append("text")
-  .attr("transform", "translate("+(width+3)+","+y(data[data.length - 1].children)+")")
+  .attr("transform", "translate("+(width+3 - 250)+","+y(data[data.length - 1].children)+")")
   .attr("dy", ".35em")
   .attr("text-anchor", "start")
   .style("fill", "red")
@@ -153,6 +171,50 @@ d3.csv("https://data.cityofnewyork.us/api/views/k46n-sa2m/rows.csv", function(er
 
   document.getElementById("last_updated_date").innerHTML = (data[data.length - 1].date).toLocaleDateString();
 
+  svg.append("text")
+  .attr("x", 600)
+  .attr("y", 50)
+  .style("opacity", "0.59")
+  .style("font-size", "14")
+  .style("fill", "black")
+  .text("Total Residents - " + data[data.length - 1].totalResidents);
+
+  svg.append("text")
+  .attr("x", 600)
+  .attr("y", 70)
+  .style("opacity", "0.59")
+  .style("font-size", "14")
+  .style("fill", "black")
+  .text("Adult Families - " + data[data.length - 1]["Adult Families in Shelter"]);
+
+  svg.append("text")
+  .attr("x", 600)
+  .attr("y", 90)
+  .style("opacity", "0.59")
+  .style("font-size", "14")
+  .style("fill", "black")
+  .text("Adult Families (w/ children) - " + data[data.length - 1]["Adults in Families with Children in Shelter"]);
+
+  var weekPrior = data[data.length - 7].totalResidents;
+  var weekNow = data[data.length - 1].totalResidents;
+
+  console.log("Prior: " + weekPrior + " Now: " + weekNow);
+
+  var difference = weekPrior - weekNow; 
+  var change = (difference/ weekPrior) * 100;
+  change = change.toFixed(2);
+
+
+  console.log(change);
+
+    svg.append("text")
+  .attr("x", 600)
+  .attr("y", 150)
+  .style("opacity", "0.79")
+  .style("font-size", "26")
+  .style("fill", "black")
+  .text(change > 0 ? "-" + change + "% (last 7 days)": "+" + change + "% (last 7 days)");
+        
 });
 
 

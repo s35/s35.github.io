@@ -2,6 +2,8 @@
 <meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+<head>
 <style>
     /* all css here */
     .xaxis {
@@ -33,7 +35,7 @@
         display: normal;
     }
 
-    body {
+    .body {
         text-align: left;
         font-family: 'Roboto', sans-serif !important;
         width: 950px;
@@ -80,12 +82,36 @@
         font-family: 'Montserrat', sans-serif !important;
         font-size: 120%;
     }
+
+
+/*    .body {display:none;}
+        #header {display:none;}
+.preload { 
+    width:100px;
+    height: 100px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}*/
+
 </style>
+
+
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
+
+</head>
 <body>
-    <br>
+
+<!-- <div class="preload">
+<img src="../../images/loader-64x/Preloader_4.gif">
+</div> -->
+
+
+<div class="body">
+
+ <br>
     <div>
         <h2 style="font-family: 'Montserrat', sans-serif;">Complaints to the Consumer Financial Protection Bureau</h2>
         <p style="font-size: 18px;">
@@ -194,6 +220,8 @@
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
 
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -324,7 +352,7 @@
 
             svg
                .append("svg:image")
-               .attr("xlink:href", "../cfpb/logos/bank-of-america-logo.jpg")
+               .attr("xlink:href", "logos/bank-of-america-logo.jpg")
                .attr("x", -27)
                .attr("y", -10)
                .attr("width", "100")
@@ -332,7 +360,7 @@
 
             svg
               .append("svg:image")
-              .attr("xlink:href", "../cfpb/logos/wells-fargo-logo.jpg")
+              .attr("xlink:href", "logos/wells-fargo-logo.jpg")
               .attr("x", 20)
               .attr("y", 50)
               .attr("width", "30")
@@ -340,7 +368,7 @@
 
             svg
                .append("svg:image")
-               .attr("xlink:href", "../cfpb/logos/1024px-Equifax.svg.png")
+               .attr("xlink:href", "logos/1024px-Equifax.svg.png")
                .attr("x", 2)
                .attr("y", 70)
                .attr("width", "60")
@@ -348,7 +376,7 @@
 
             svg
                .append("svg:image")
-               .attr("xlink:href", "../cfpb/logos/experian_logo.png")
+               .attr("xlink:href", "logos/experian_logo.png")
                .attr("x", 2)
                .attr("y", 102)
                .attr("width", "60")
@@ -358,7 +386,7 @@
 
             svg
               .append("svg:image")
-              .attr("xlink:href", "../cfpb/logos/logo.svg")
+              .attr("xlink:href", "logos/logo.svg")
               .attr("x", -15)
               .attr("y", 155)
               .attr("width", "80")
@@ -366,7 +394,7 @@
 
             svg
               .append("svg:image")
-              .attr("xlink:href", "../cfpb/logos/1200262f5591b8fd7ee91c6384b96ef3.png")
+              .attr("xlink:href", "logos/1200262f5591b8fd7ee91c6384b96ef3.png")
               .attr("x", -18)
               .attr("y", 128)
               .attr("width", "80")
@@ -374,7 +402,7 @@
 
             svg
               .append("svg:image")
-              .attr("xlink:href", "../cfpb/logos/Citibank-logo.png")
+              .attr("xlink:href", "logos/Citibank-logo.png")
               .attr("x", -7)
               .attr("y", 200)
               .attr("width", "80")
@@ -383,7 +411,7 @@
 
             svg
               .append("svg:image")
-              .attr("xlink:href", "../cfpb/logos/Ocwen_Logo.png")
+              .attr("xlink:href", "logos/Ocwen_Logo.png")
               .attr("x", 5)
               .attr("y", 249)
               .attr("width", "60")
@@ -392,7 +420,7 @@
 
             svg
               .append("svg:image")
-              .attr("xlink:href", "../cfpb/logos/Capital_One.svg")
+              .attr("xlink:href", "logos/Capital_One.svg")
               .attr("x", -5)
               .attr("y", 285)
               .attr("width", "60")
@@ -400,7 +428,7 @@
 
             svg
               .append("svg:image")
-              .attr("xlink:href", "../cfpb/logos/nationstar-mortgage_logo_1839.png")
+              .attr("xlink:href", "logos/nationstar-mortgage_logo_1839.png")
               .attr("x", -15)
               .attr("y", 314)
               .attr("width", "80")
@@ -425,4 +453,17 @@
 
 
     </script>
+
+
+<!--     <script type="text/javascript">
+          $(".preload").fadeOut(3500, function() {
+        $(".body").fadeIn(2000);    
+         $("#header").fadeIn(2000);  
+         });
+    </script> -->
+
+
+</div>
+
+   
 </body>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
     <style>
-        body {
+        .body {
             text-align: left;
             font-family: 'Roboto', sans-serif !important;
             width: 950px;
@@ -37,7 +37,7 @@
 
 
 </head>
-<body>
+<body class="body">
 
     <h2>Motor Vehicle Collisions in NYC by zip code </h2>
 
@@ -66,7 +66,7 @@
 
 
 
-    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 
     <script>
@@ -82,7 +82,7 @@
         //    .range(['steelblue', 'lightgreen', 'darkgreen'])
         //    .domain([-10000, 60000, 150000]);
 
-        var color = d3.scale.threshold()
+        var color = d3.scaleThreshold()
            .domain([1500, 3000, 4500, 6000, 7500, 9000, 10500, 13000])
            .range(["#F1C0C0", "#ECAEAC", "#E79C99", "#E28A86", "#DD7873", "#D86660", "#D3544C", "#CE4239", "#C93026"
                ]);
@@ -144,21 +144,21 @@
 
 
 
-        var projection = d3.geo.albers()
+        var projection = d3.geoAlbers()
          .center([0, 40.7])
          .rotate([74, 0])
          .translate([width / 2, height / 2])
          .scale(100000);
 
-        var path = d3.geo.path()
+        var path = d3.geoPath()
             .projection(projection);
 
         var income = d3.map();
 
-        d3.json("nyc-zip-codes.json", function (error, data) {
+        d3.json("../nypd/nyc-zip-codes.json", function (error, data) {
             if (error) return console.error(error);
 
-            d3.csv("counts.csv", function (error, counts) {
+            d3.csv("../nypd/counts.csv", function (error, counts) {
                 var nycObj = data.objects[Object.keys(data.objects)[0]];
 
 

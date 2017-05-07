@@ -36,7 +36,7 @@
             fill: darkslategray;
         }
 
-        body {
+        #body {
             text-align: left;
             font-family: 'Roboto', sans-serif !important;
             width: 950px;
@@ -55,11 +55,21 @@
             h1, h2, h3, h4, h5, h6{
         font-family: 'Montserrat', sans-serif !important;
     }
+
+/*        #body {display:none;}
+        #header {display:none;}
+.preload { 
+    width:100px;
+    height: 100px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}*/
     </style>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
-    <link rel="stylesheet" href="../resources/JavaScript-autoComplete-master/auto-complete.css" />
+    <link rel="stylesheet" href="../../resources/JavaScript-autoComplete-master/auto-complete.css" />
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
@@ -67,7 +77,15 @@
 
 
 <body>
-    <br>
+
+<!-- <div class="preload">
+<img src="../../images/loader-64x/Preloader_4.gif">
+</div> -->
+
+
+
+<div id="body">
+ <br>
     <div>
         <h2>NYC Public High Schools at a glance</h2>
         <p style="font-size: 18px; display:inline;">
@@ -137,6 +155,9 @@
     <p>Data Source: <a href="https://data.cityofnewyork.us/Education/DOE-High-School-Directory-2017/s3k6-pzi2">https://data.cityofnewyork.us/Education/DOE-High-School-Directory-2017/s3k6-pzi2</a></p>
     <p>Graph inspired by: <a href="https://gf.neocities.org/co2bs/co2bee.html">https://gf.neocities.org/co2bs/co2bee.html</a></p>
     <br>
+</div>
+
+   
 
     <!-- Jquery js -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -145,12 +166,17 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="../resources/JavaScript-autoComplete-master/auto-complete.min.js"></script>
+    <script type="text/javascript" src="../../resources/JavaScript-autoComplete-master/auto-complete.min.js"></script>
 
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
 
+
+
     <script type="text/javascript">
+
+
+
 
         var w = 1000, h = 335;
 
@@ -193,7 +219,7 @@
         chartState.variable = "graduation_rate";
         chartState.legend = "Graduation Rate";
 
-        d3.csv("../data/DOE_High_School_Directory_2017.csv", function (error, data) {
+        d3.csv("../../data/DOE_High_School_Directory_2017.csv", function (error, data) {
             if (error) throw error;
 
             data.forEach(function (d) {
@@ -420,6 +446,11 @@
 
     </script>
 
+
+
+
+
+
     <script>
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
@@ -432,5 +463,18 @@
         ga('send', 'pageview');
 
     </script>
+
+<!--         <script type="text/javascript">
+          $(".preload").fadeOut(2500, function() {
+          $("#body").fadeIn(1000);    
+         $("#header").fadeIn(1000);  
+         });
+    </script> -->
+
+<!-- 
+        <script type="text/javascript">
+        $("#header").load("../../master.html");
+    </script> -->
+
 </body>
 </html>

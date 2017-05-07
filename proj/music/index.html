@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Music Visualizer</title>
+
+  <style type="text/css">
+      body {
+    text-align: left;
+    font-family: 'Roboto', sans-serif !important;
+    width: 950px;
+    margin: 0 auto !important;
+  }
+
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif !important;
+  }
+
+  .icon{
+    cursor: pointer; 
+    opacity: 0.69;
+  }
+  </style>
+
+
+  <!-- font awesome css -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
+
+
+</head>
+
+<body>
+
+  <h2>Music Visualizer</h3>
+
+
+
+
+  <audio id="audioElement" src="Akashic_Records_-_Story_of_One_Success__extended_mix_.mp3"></audio>
+
+
+  <div>
+    <i class="fa fa-play fa-2x icon" onclick="document.getElementById('audioElement').play()"></i>&nbsp;
+    <i class="fa fa-pause fa-2x icon" onclick="document.getElementById('audioElement').pause()"></i>
+  </div>
+
+
+  <div style="float: right;">
+          <i class="fa fa-plus fa-2x icon" onclick="document.getElementById('audioElement').volume+=0.1" ></i>&nbsp;
+    <i class="fa fa-minus fa-2x icon" onclick="document.getElementById('audioElement').volume-=0.1" ></i>
+  </div>
+
+
+<br />
+
+
+  <div id="graph1"></div>
+
+  <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script>
+    $(document).ready(function () {
+
+      var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var audioElement = document.getElementById('audioElement');
+      var audioSrc = audioCtx.createMediaElementSource(audioElement);
+      var analyser = audioCtx.createAnalyser();
+
+  // Bind our analyser to the media element source.
+  audioSrc.connect(analyser);
+  audioSrc.connect(audioCtx.destination);
+
+  //var frequencyData = new Uint8Array(analyser.frequencyBinCount);
+  var frequencyData = new Uint8Array(150);
+
+
+  var margin = {top: 20, right: 3, bottom: 20, left: 3};
+
+  var svgHeight = 280 - margin.left - margin.right;
+  var svgWidth = 960 - margin.top - margin.bottom;
+  var barPadding = '3';
+
+
+  function createSvg(parent, height, width) {
+    return d3.select(parent).append('svg').attr('height', height + margin.top + margin.bottom).attr('width', width + margin.left + margin.right).append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");;
+  }
+
+  var svg = createSvg('#graph1', svgHeight, svgWidth);
+
+  // Create our initial D3 chart.
+  svg.selectAll('circle')
+  .data(frequencyData)
+  .enter()
+  .append('circle')
+  .attr('r', 3)
+  .attr('cx', function (d, i) {
+    return i * (svgWidth / frequencyData.length);
+  });
+
+  function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++ ) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+
+  // Continuously loop and update chart with frequency data.
+  function renderChart() {
+   requestAnimationFrame(renderChart);
+
+     // Copy frequency data to frequencyData array.
+     analyser.getByteFrequencyData(frequencyData);
+
+     // Update d3 chart with new data.
+     svg.selectAll('circle')
+     .data(frequencyData)
+     .attr('cy', function(d) {
+       return svgHeight - d;
+     })
+     .attr('fill', function(d, i) {
+      return 'rgb(0,' + i + ',' + d + ')';
+     });
+
+
+   }
+
+  // Run the loop
+  renderChart();
+
+});
+
+
+</script>
+</body>
+</html>
