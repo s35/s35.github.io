@@ -62,13 +62,27 @@
       cursor: pointer;
     }
 
+    .name{
+      cursor: default;
+      text-decoration: none;
+      color:black;
+      opacity: 0.73;
+    }
+
+    .name:hover{
+      cursor: pointer;
+      text-decoration: none;
+      color:black;
+      opacity: 0.73;
+    }
+
   </style>
 
 </head>
 <body>
 
   <div class="container2">
-    <h3 style="display: inline;">Saurav Mohapatra</h3>
+    <a class="name" href="../"><h3 style="display: inline;">Saurav Mohapatra</h3></a>
     <h5 style="display: inline; float: right;">Data, Visualization & the Web</h5>
   </div>
 
@@ -79,7 +93,7 @@
       <div class="project" id="indrmv"> <img src="screens/Capture3.PNG" /> </div>
       <div class="project" id="ufo"> <img src="screens/Capture4.PNG" /> </div>
       <div class="project" id="nypd"> <img  src="screens/Capture5.PNG" /> </div>
-  <!--    <div class="project" id="dhs"> <img src="#" /> </div>
+<!--      <div class="project" id="dhs"> <img src="#" /> </div>
       <div class="project" id="gdp"><img src="#" /> </div>
       <div class="project" id="carbon"> <img src="#" /> </div>
       <div class="project" id="music"><img src="#" /> </div>      
@@ -110,15 +124,13 @@
 
 
 <script type="text/javascript">
-  
-
-  //Slick Carousel
+      //Slick Carousel
   $(".single-item").slick({
     slidesToShow: 7,
     slidesToScroll: 1,
-    centerMode: true,
+    //centerMode: true,
     infinite: true,
-    centerPadding: '114px',
+    //centerPadding: '114px',
     responsive: [
     {
       breakpoint: 1024,
@@ -144,7 +156,10 @@
       }
     }]
   });
+</script>
 
+
+<script type="text/javascript">
   // URL Nav
 
   //On Page Load, check URL
@@ -170,6 +185,7 @@
       window.location.href = url + "?proj=" + id;
     });
   });
+
 
 </script>
 
