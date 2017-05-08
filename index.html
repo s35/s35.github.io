@@ -93,7 +93,7 @@
       <div class="project" id="indrmv"> <img src="screens/Capture3.PNG" /> </div>
       <div class="project" id="ufo"> <img src="screens/Capture4.PNG" /> </div>
       <div class="project" id="nypd"> <img  src="screens/Capture5.PNG" /> </div>
-     <div class="project" id="dhs"> <img src="screens/Capture8.PNG" /> </div>
+     <div class="project" id="dhs"> <img src="screens/Capture8.png" /> </div>
       <div class="project" id="gdp"><img src="#" /> </div>
       <div class="project" id="carbon"> <img src="#" /> </div>
       <div class="project" id="music"><img src="#" /> </div>      
@@ -126,18 +126,27 @@
 <script type="text/javascript">
       //Slick Carousel
   $(".single-item").slick({
-    slidesToShow: 7,
+    slidesToShow: 8,
     slidesToScroll: 1,
     //centerMode: true,
     infinite: false,
     //centerPadding: '114px',
     responsive: [
+      {
+      breakpoint: 1500,
+      settings: {
+        slidesToShow: 7,
+        slidesToScroll: 1,
+        infinite: false,
+        dots: false
+      }
+    },
     {
       breakpoint: 1024,
       settings: {
         slidesToShow: 3,
         slidesToScroll: 3,
-        infinite: true,
+        infinite: false,
         dots: true
       }
     },
