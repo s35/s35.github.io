@@ -3,7 +3,7 @@
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <style>
-	body {
+	.body {
 		text-align: left;
 		font-family: 'Roboto', sans-serif !important;
 		width: 950px;
@@ -28,25 +28,27 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" >
 
 <body>
-  <br />
-  <h2 style="display: inline;">New York City - Department of Homeless Services</h2>
-  <h5>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</h5>
+
+<div class="body">
+<br/>
+  <h2>NYC - Department of Homeless Services</h2>
+  <p>The New York City Department of Homeless Services (DHS) is an agency within the government of New York City that provides services to the homeless and its ultimate aim is to overcome homelessness in NYC. Below is some history about the department and what they do. A live daily census tracker also shows how many individuals are off the streets and staying in DHS shelters.<p>
   <hr />
   
   <div class="row">
     <div class="col-md-6">
-      <h3>Why DHS?</h3>
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+      <h4>A little history...</h4>
+      The department was established in 1993 and was the first of its kind for any major city in the United States. In 2015, the budget for the department was at 953.5M. DHS currently operates multiple shelters throughout the 5 boroughs in the city. The DHS maintains a live resident census everyday which can be tracked live below.
+      <br/><br />
+      The tracker shows counts by single adults and children. It also shows if the total counts have gone up/down in the last 7 days. DHS works effortlessly to assist New Yorkers in transitioning from shelter into permanent housing.
       <br/>
-      It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+      <h4>Donations can be made to support DHS. More information is available <a href="https://www1.nyc.gov/site/dhs/about/donations.page" target="_blank">here</a>.</h4>
     </div>
     <div class="col-md-6">
       <iframe width="100%" height="310" src="https://www.youtube.com/embed/E5xpaoA-lcg?autoplay=1" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
-  <p>
 
-  </p>
   <hr />
 
   <h3 style="display: inline;">Current Shelter Residents</h3> 
@@ -55,9 +57,6 @@
 
   <div id="graph"></div>
 
-
-  <p></p>
-    <h6>Disclaimer: spikes in the data are possibly data entry errors</h6>
   <hr />
 
   <p>Created by: <a href="../../index.html">Saurav Mohapatra</a></p>
@@ -78,10 +77,10 @@
     var data_url = "https://data.cityofnewyork.us/api/views/k46n-sa2m/rows.csv";
 
 
-		// set the dimensions and margins of the graph
-		var margin = {top: 20, right: 150, bottom: 30, left: 50},
-		width = 900 - margin.left - margin.right,
-		height = 300 - margin.top - margin.bottom;
+    // set the dimensions and margins of the graph
+    var margin = {top: 20, right: 150, bottom: 30, left: 50},
+    width = 900 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom;
 
 // parse the date / time
 var parseTime = d3.timeParse("%m/%d/%Y");
@@ -110,11 +109,11 @@ var svg = d3.select("#graph").append("svg")
 .attr("height", height + margin.top + margin.bottom)
 .append("g")
 .attr("transform",
-	"translate(" + margin.left + "," + margin.top + ")");
+  "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
 d3.csv(data_url, function(error, data) {
-	if (error) throw error;
+  if (error) throw error;
 
   // format the data
   data.forEach(function(d) {
@@ -130,7 +129,7 @@ d3.csv(data_url, function(error, data) {
   x.domain(d3.extent(data, function(d) { return d.date; }));
 
   y.domain([0, d3.max(data, function(d) {
-  	return Math.max(d.adults, d.children); })]);
+    return Math.max(d.adults, d.children); })]);
 
   // Add the valueline path.
   svg.append("path")
@@ -149,7 +148,7 @@ d3.csv(data_url, function(error, data) {
   svg.append("g")
   .attr("transform", "translate(0," + height + ")")
   .call(d3.axisBottom(x)
-  	.ticks(5));
+    .ticks(5));
 
   // Add the Y Axis
   svg.append("g")
@@ -209,17 +208,28 @@ d3.csv(data_url, function(error, data) {
 
     svg.append("text")
   .attr("x", 600)
-  .attr("y", 150)
+  .attr("y", 180)
   .style("opacity", "0.79")
   .style("font-size", "26")
   .style("fill", "black")
   .text(change > 0 ? "-" + change + "% (last 7 days)": "+" + change + "% (last 7 days)");
+
+      svg.append("text")
+  .attr("x", 675)
+  .attr("y", 150)
+  .style("opacity", "0.79")
+  .style("font-size", "26")
+  .style("fill", "black")
+  .text("Total");
         
 });
 
 
 
 </script>
+</div>
+
+
 
 </body>
 
