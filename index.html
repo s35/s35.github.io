@@ -44,6 +44,8 @@
       margin: 0 auto;
       padding: 10px;
       width: 100%;
+      background-color: #11608d;
+      color: white;
     }
 
     .single-item img {
@@ -65,15 +67,67 @@
     .name{
       cursor: default;
       text-decoration: none;
-      color:black;
+      color:white;
       opacity: 0.73;
     }
 
     .name:hover{
       cursor: pointer;
       text-decoration: none;
-      color:black;
-      opacity: 0.73;
+      color:white;
+      opacity: 0.43;
+    }
+
+
+    .overlay {
+      height: 0%;
+      width: 100%;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0, 0.9);
+      overflow-y: hidden;
+      transition: 0.5s;
+    }
+
+    .overlay-content {
+      position: relative;
+      top: 25%;
+      width: 100%;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .overlay a {
+      padding: 8px;
+      text-decoration: none;
+      font-size: 20px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .overlay a:hover, .overlay a:focus {
+      color: #f1f1f1;
+    }
+
+    .overlay .closebtn {
+      position: absolute;
+      top: 20px;
+      right: 45px;
+      font-size: 60px;
+    }
+
+    @media screen and (max-height: 450px) {
+      .overlay {overflow-y: auto;}
+      .overlay a {font-size: 20px}
+      .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
+      }
     }
 
   </style>
@@ -81,31 +135,31 @@
 </head>
 <body>
 
-  <div class="container2">
-    <h3 style="display: inline;"><a class="name" href="../">Saurav Mohapatra</a></h3>
-    <h5 style="display: inline; float: right; ">Data Vizardry</h5>
+  <div id="myNav" class="overlay">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div class="overlay-content">
+      <a href="#" class="project" id="cfpb" onclick="closeNav()">A quick look at CFPB</a>
+      <a href="#" class="project" id="dhs" onclick="closeNav()">NYC - Department of Homeless Services</a>
+      <a href="#" class="project" id="nypd" onclick="closeNav()">NYC - Motor Vehicle Collisions by Zip Code</a>
+      <a href="#" class="project" id="ufo" onclick="closeNav()">UFO sightings in US/Canada (2016)</a>
+      <a href="#" class="project" id="indrmv" onclick="closeNav()">Auto Revolution in India</a>
+      <a href="#" class="project" id="nycdoe" onclick="closeNav()">NYC - Department of Education High Schools</a>   
+  
+    </div>
   </div>
 
-  <div class="container1">
-    <div class='single-item'>
-      <div class="project" id="cfpb" ><img src="screens/Capture1.PNG" /> </div>
-      <div class="project" id="nycdoe"> <img src="screens/Capture2.PNG" /> </div>
-      <div class="project" id="indrmv"> <img src="screens/Capture3.PNG" /> </div>
-      <div class="project" id="ufo"> <img src="screens/Capture4.PNG" /> </div>
-      <div class="project" id="nypd"> <img  src="screens/Capture5.PNG" /> </div>
-     <div class="project" id="dhs"> <img src="screens/Capture8.png" /> </div>
-<!--       <div class="project" id="gdp"><img src="#" /> </div>
-      <div class="project" id="carbon"> <img src="#" /> </div> -->
-<!--       <div class="project" id="music"><img src="#" /> </div>      
-      <div class="project" id="new1"> <img src="#" /> </div>
-      <div class="project" id="new2"><img src="#" /> </div> -->
+  <div class="container2">
+    <h3 style="display: inline;"><a class="name" href="../">Saurav Mohapatra</a></h3>
+    <div style=" float:right;">
+          <span style="font-size:22px;cursor:pointer;" onclick="openNav()">&#9776;</span>
     </div>
-  </div> 
 
-  <div id="content"></div>
+  </div>
+
+<div id="content"></div>
 
 
-  <br/>
+<br/>
 
 </div>
 
@@ -125,14 +179,14 @@
 
 <script type="text/javascript">
       //Slick Carousel
-  $(".single-item").slick({
-    slidesToShow: 8,
-    slidesToScroll: 1,
+      $(".single-item").slick({
+        slidesToShow: 8,
+        slidesToScroll: 1,
     //centerMode: true,
     infinite: false,
     //centerPadding: '114px',
     responsive: [
-      {
+    {
       breakpoint: 1500,
       settings: {
         slidesToShow: 7,
@@ -167,6 +221,16 @@
   });
 </script>
 
+<script>
+  function openNav() {
+    document.getElementById("myNav").style.height = "100%";
+  }
+
+  function closeNav() {
+    document.getElementById("myNav").style.height = "0%";
+  }
+</script>
+
 
 <script type="text/javascript">
   // URL Nav
@@ -181,8 +245,8 @@
     $("#content").load("/proj/" + id + "/index.html");
   } else{
      //Default Project Load
-    $("#content").load("/proj/nycdoe/index.html");
-  }
+     $("#content").load("/proj/nycdoe/index.html");
+   }
 
   //New Project Click Event
   $(".project").on("click", function(){
